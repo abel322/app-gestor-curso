@@ -1,0 +1,101 @@
+// Prisma Schema for LMS & Music E-Commerce Dashboard
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String           @id @default(uuid())
+  email     String           @unique
+  name      String
+  role      String           @default("STUDENT") // ADMIN, STUDENT, CUSTOMER
+  createdAt DateTime         @default(now())
+  progress  CourseProgress[]
+  purchases Purchase[]
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String
+  image       String
+  price       Float
+  published   Boolean  @default(false)
+  status      String   @default("DRAFT") // DRAFT, PUBLISHED, DRIP_SCHEDULED
+  createdAt   DateTime @default(now())
+  modules     Module[]
+}
+
+model Module {
+  id       String   @id @default(uuid())
+  title    String
+  order    Int      @default(0)
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons  Lesson[]
+}
+
+model Lesson {
+  id          String             @id @default(uuid())
+  title       String
+  videoUrl    String?
+  content     String?
+  order       Int                @default(0)
+  duration    Int                @default(0) // duration in seconds
+  moduleId    String
+  module      Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  attachments LessonAttachment[]
+  progress    CourseProgress[]
+}
+
+model LessonAttachment {
+  id       String @id @default(uuid())
+  title    String
+  fileUrl  String
+  fileType String // PDF, MIDI, PRESET, ZIP
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+model CourseProgress {
+  id          String    @id @default(uuid())
+  userId      String
+  lessonId    String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
+
+model MusicProduct {
+  id            String   @id @default(uuid())
+  title         String
+  slug          String   @unique
+  description   String
+  price         Float
+  bpm           Int?
+  key           String?
+  audioDemoUrl  String
+  downloadZipUrl String
+  productType   String   // BEAT, SAMPLE_PACK, PRESET, MIDI
+  createdAt     DateTime @default(now())
+}
+
+model Purchase {
+  id          String   @id @default(uuid())
+  userId      String
+  productType String   // COURSE, MUSIC_ASSET
+  referenceId String   // Course ID or MusicProduct ID
+  amount      Float
+  status      String   @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
