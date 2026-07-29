@@ -87,6 +87,84 @@ export const INITIAL_USERS: UserMock[] = [
 
 export const INITIAL_COURSES: CourseMock[] = [
   {
+    id: "crs-mezcla",
+    title: "Curso Profesional de Mezcla de Sonido",
+    slug: "curso-profesional-mezcla-sonido",
+    description: "Aprende ecualización quirúrgica, procesamiento dinámico, emulaciones analógicas y técnicas avanzadas de balance espacial para llevar tus canciones a nivel comercial.",
+    image: "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?q=80&w=800&auto=format&fit=crop",
+    price: 119.99,
+    published: false,
+    status: "DRAFT",
+    createdAt: "2026-03-25",
+    modules: [
+      {
+        id: "mod-m1",
+        title: "Módulo 1: Ecualización y Balance",
+        order: 1,
+        courseId: "crs-mezcla",
+        lessons: [
+          {
+            id: "les-m101",
+            title: "Lección 1.1: Limpieza de Frecuencias y Filtros Paso Alto",
+            order: 1,
+            duration: 840,
+            moduleId: "mod-m1",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            content: "Cómo identificar frecuencias resonantes en bombo, bajo y sintetizadores usando ecualizadores paramétricos de alta precisión.",
+            attachments: [
+              { id: "att-m1", title: "Stems_Multitrack_WAV_Sesion.zip", fileUrl: "#", fileType: "ZIP" },
+              { id: "att-m2", title: "Preset_FabFilter_ProQ3_Limpieza.fxp", fileUrl: "#", fileType: "PRESET" },
+              { id: "att-m3", title: "Guia_Ecualizacion_Pro.pdf", fileUrl: "#", fileType: "PDF" },
+              { id: "att-m4", title: "Groove_Bajo_Midi.mid", fileUrl: "#", fileType: "MIDI" },
+            ],
+          },
+          {
+            id: "les-m102",
+            title: "Lección 1.2: Balance de Niveles en Kicks y Bajos",
+            order: 2,
+            duration: 620,
+            moduleId: "mod-m1",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            content: "Técnicas de alineación de fase y calibración VU meter para que el subgrave nunca enmascare la mezcla.",
+            attachments: [
+              { id: "att-m5", title: "Guia_Calibracion_VU.pdf", fileUrl: "#", fileType: "PDF" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "mod-m2",
+        title: "Módulo 2: Compresión y Dinámica",
+        order: 2,
+        courseId: "crs-mezcla",
+        lessons: [
+          {
+            id: "les-m201",
+            title: "Lección 2.1: Compresión VCA vs FET vs Opto",
+            order: 1,
+            duration: 980,
+            moduleId: "mod-m2",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            content: "Cuándo usar un 1176, LA-2A o SSL Bus Compressor para moldear el ataque y sostenido de baterías y voces.",
+            attachments: [
+              { id: "att-m6", title: "Tabla_Tiempos_Ataque_Release.pdf", fileUrl: "#", fileType: "PDF" },
+            ],
+          },
+          {
+            id: "les-m202",
+            title: "Lección 2.2: Sidechain Dinámico y Control de Transitorios",
+            order: 2,
+            duration: 750,
+            moduleId: "mod-m2",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            content: "Creación de bombeo sutil y descompresión de frecuencias medias para mantener claridad vocal.",
+            attachments: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: "crs-1",
     title: "Masterclass de Diseño de Sonido en Serum: Cyberpunk y Trap Moderno",
     slug: "masterclass-diseno-sonido-serum",
@@ -180,37 +258,6 @@ export const INITIAL_COURSES: CourseMock[] = [
             attachments: [
               { id: "att-5", title: "Kit_Log_Drums_Amapiano.zip", fileUrl: "#", fileType: "ZIP" },
             ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "crs-3",
-    title: "Mezcla y Masterización con Emulaciones Analógicas",
-    slug: "mezcla-masterizacion-emulaciones-analogicas",
-    description: "Transforma maquetas caseras en másters listos para plataformas utilizando canales SSL, saturación de cinta Neve y ecualización dinámica.",
-    image: "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?q=80&w=800&auto=format&fit=crop",
-    price: 149.99,
-    published: false,
-    status: "DRAFT",
-    createdAt: "2026-03-10",
-    modules: [
-      {
-        id: "mod-301",
-        title: "Módulo 1: Estructura de Ganancia y Mezcla de Voces",
-        order: 1,
-        courseId: "crs-3",
-        lessons: [
-          {
-            id: "les-3001",
-            title: "1.1 De-Essing Vocal, Compresión y Amplitud Estéreo",
-            order: 1,
-            duration: 1200,
-            moduleId: "mod-301",
-            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            content: "Cómo abrir espacio para las voces principales en mezclas electrónicas densas.",
-            attachments: [],
           },
         ],
       },

@@ -22,29 +22,34 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: "Tienda Musical", href: "/store", icon: ShoppingBag },
-    { label: "Cursos LMS", href: "/courses", icon: BookOpen },
-    { label: "Panel de Control", href: "/admin/dashboard", icon: LayoutDashboard, roleRequired: "ADMIN" },
-    { label: "Creador de Cursos", href: "/admin/courses/builder", icon: Wrench, roleRequired: "ADMIN" },
+    { label: "📚 Creador & Editor", href: "/admin/courses/builder", icon: Wrench, roleRequired: "ADMIN" },
+    { label: "📊 Métricas Estudiantes", href: "/admin/students", icon: BookOpen, roleRequired: "ADMIN" },
+    { label: "📈 Dashboard KPI", href: "/admin/dashboard", icon: LayoutDashboard, roleRequired: "ADMIN" },
+    { label: "🎵 Tienda & Assets", href: "/store", icon: ShoppingBag },
     { label: "Mis Descargas", href: "/account/downloads", icon: Download },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#090a0f]/80 backdrop-blur-md border-b border-zinc-800/80">
+    <header className="sticky top-0 z-40 bg-[#090a0f]/90 backdrop-blur-md border-b border-zinc-800/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
           {/* Logo */}
-          <Link href="/store" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-teal-500/40 flex items-center justify-center shadow-glow group-hover:border-teal-400 transition-colors">
+          <Link href="/admin/courses/builder" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-teal-500/50 flex items-center justify-center shadow-glow group-hover:border-teal-400 transition-colors">
               <Sparkles className="w-5 h-5 text-teal-400 group-hover:scale-110 transition-transform" />
             </div>
             <div>
-              <span className="font-extrabold text-lg tracking-wider text-zinc-100 font-mono">
-                SYNTHESIS<span className="text-teal-400">.AUDIO</span>
-              </span>
-              <span className="block text-[10px] text-zinc-400 uppercase tracking-widest -mt-1 font-sans">
-                Plataforma LMS y Tienda Musical
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-lg tracking-wider text-zinc-100 font-mono">
+                  SYNTHESIS<span className="text-teal-400">.STUDIO</span>
+                </span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-teal-500/10 text-teal-300 border border-teal-500/30">
+                  LMS ADMIN
+                </span>
+              </div>
+              <span className="block text-[10px] text-zinc-400 uppercase tracking-widest -mt-0.5 font-sans">
+                Panel de Administración y Creación de Cursos
               </span>
             </div>
           </Link>
@@ -53,19 +58,19 @@ export function Navbar() {
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               if (item.roleRequired && userRole !== item.roleRequired) return null;
-              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+              const isActive = pathname === item.href || (item.href !== "/store" && pathname.startsWith(item.href));
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all ${
                     isActive
-                      ? "bg-zinc-800/90 text-teal-300 border border-teal-500/30 shadow-glow"
+                      ? "bg-teal-500/10 text-teal-300 border border-teal-500/40 shadow-glow"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? "text-teal-400" : "text-zinc-400"}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-teal-400" : "text-zinc-400"}`} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -82,7 +87,7 @@ export function Navbar() {
               {userRole === "ADMIN" ? (
                 <>
                   <ShieldAlert className="w-3.5 h-3.5 text-teal-400" />
-                  <span>Modo: <strong className="text-teal-300">ADMIN</strong></span>
+                  <span>Modo: <strong className="text-teal-300">LMS ADMIN</strong></span>
                 </>
               ) : (
                 <>
