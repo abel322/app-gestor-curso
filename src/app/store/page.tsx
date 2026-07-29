@@ -8,16 +8,11 @@ import {
   Play, 
   Pause, 
   Search, 
-  SlidersHorizontal, 
   Sparkles, 
-  Disc, 
-  Layers, 
-  FileMusic, 
-  Download, 
-  Check, 
   ShoppingBag,
   Zap,
-  ArrowRight
+  ArrowRight,
+  Check
 } from "lucide-react";
 
 export default function StorefrontPage() {
@@ -28,6 +23,14 @@ export default function StorefrontPage() {
   const [checkoutModalProduct, setCheckoutModalProduct] = useState<MusicProductMock | null>(null);
 
   const { currentTrack, isPlaying, playTrack } = useAudio();
+
+  const filterOptions = [
+    { key: "ALL", label: "TODOS" },
+    { key: "BEAT", label: "BEAT" },
+    { key: "SAMPLE_PACK", label: "LIBRERÍA DE SAMPLES" },
+    { key: "PRESET", label: "PRESETS" },
+    { key: "MIDI", label: "MIDI" },
+  ];
 
   const filteredProducts = products.filter((p) => {
     const matchesType = filterType === "ALL" || p.productType === filterType;
@@ -74,15 +77,15 @@ export default function StorefrontPage() {
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono tracking-wide">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>DIRECT PRODUCER CATALOG</span>
+            <span>CATÁLOGO DIRECTO DE PRODUCTOR</span>
           </div>
 
           <h1 className="text-3xl md:text-5xl font-extrabold text-zinc-100 tracking-tight leading-tight">
-            High-Performance <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-300">Sound Kits & Beats</span>
+            Kits de Sonido y Beats <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-300">de Alto Rendimiento</span>
           </h1>
 
           <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
-            Instant royalty-free beat licenses, Xfer Serum preset banks, multi-sampled drum kits, and MIDI progression packs. Audition tracks with our real-time global audio engine.
+            Licencias de beats libres de regalías, bancos de presets para Xfer Serum, drum kits multicapa y packs de progresiones MIDI. Preescucha pistas en tiempo real con nuestro motor de audio.
           </p>
 
           <div className="flex flex-wrap gap-4 pt-2">
@@ -90,7 +93,7 @@ export default function StorefrontPage() {
               href="/courses"
               className="px-5 py-2.5 rounded-xl bg-teal-400 text-zinc-950 font-semibold hover:bg-teal-300 transition-transform active:scale-95 flex items-center gap-2 text-sm shadow-glow"
             >
-              <span>Explore LMS Masterclasses</span>
+              <span>Explorar Masterclasses</span>
               <ArrowRight className="w-4 h-4" />
             </a>
             <a
@@ -98,7 +101,7 @@ export default function StorefrontPage() {
               className="px-5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-700/80 text-zinc-300 hover:text-zinc-100 hover:border-zinc-500 transition-colors text-sm font-medium flex items-center gap-2"
             >
               <Zap className="w-4 h-4 text-purple-400" />
-              <span>Admin KPI Dashboard</span>
+              <span>Panel de Métricas (KPI)</span>
             </a>
           </div>
         </div>
@@ -109,27 +112,27 @@ export default function StorefrontPage() {
         
         {/* Type Badges */}
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
-          {["ALL", "BEAT", "SAMPLE_PACK", "PRESET", "MIDI"].map((type) => (
+          {filterOptions.map((opt) => (
             <button
-              key={type}
-              onClick={() => setFilterType(type)}
+              key={opt.key}
+              onClick={() => setFilterType(opt.key)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap ${
-                filterType === type
+                filterType === opt.key
                   ? "bg-teal-400 text-zinc-950 font-bold shadow-glow"
                   : "bg-zinc-900/90 text-zinc-400 hover:text-zinc-200 border border-zinc-800"
               }`}
             >
-              {type.replace("_", " ")}
+              {opt.label}
             </button>
           ))}
         </div>
 
         {/* Search */}
-        <div className="relative w-full md:w-72">
+        <div className="relative w-full md:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
           <input
             type="text"
-            placeholder="Search title, key, tag..."
+            placeholder="Buscar por título, escala, etiqueta..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 text-sm focus:outline-none focus:border-teal-500/60 focus:ring-1 focus:ring-teal-500/60"
@@ -156,7 +159,7 @@ export default function StorefrontPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className={`px-2.5 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider border ${getTypeBadgeColor(product.productType)}`}>
-                    {product.productType.replace("_", " ")}
+                    {product.productType === "SAMPLE_PACK" ? "LIBRERÍA DE SAMPLES" : product.productType}
                   </span>
                   
                   {product.bpm && (
@@ -176,20 +179,19 @@ export default function StorefrontPage() {
                   </p>
                 </div>
 
-                {/* Tags (Key, Specs) */}
+                {/* Key tag */}
                 <div className="flex items-center gap-2 pt-1">
                   {product.key && (
                     <span className="text-[11px] font-mono text-teal-400/90 bg-teal-500/5 px-2 py-0.5 rounded border border-teal-500/20">
-                      Key: {product.key}
+                      Tonalidad: {product.key}
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Action Bar (Audio Play + Buy / Download) */}
+              {/* Action Bar */}
               <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between gap-3">
                 
-                {/* Audio Preview Play Button */}
                 <button
                   onClick={() =>
                     playTrack({
@@ -209,24 +211,23 @@ export default function StorefrontPage() {
                   {isCurrentlyPlaying ? (
                     <>
                       <Pause className="w-3.5 h-3.5 fill-current" />
-                      <span>Playing</span>
+                      <span>Reproduciendo</span>
                     </>
                   ) : (
                     <>
                       <Play className="w-3.5 h-3.5 fill-current text-teal-400" />
-                      <span>Preview</span>
+                      <span>Preescucha</span>
                     </>
                   )}
                 </button>
 
-                {/* Buy Button */}
                 {isPurchased ? (
                   <a
                     href="/account/downloads"
                     className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 hover:bg-emerald-500/20"
                   >
                     <Check className="w-3.5 h-3.5" />
-                    <span>Owned</span>
+                    <span>Comprado</span>
                   </a>
                 ) : (
                   <button
@@ -244,7 +245,7 @@ export default function StorefrontPage() {
         })}
       </div>
 
-      {/* Checkout Modal Simulation */}
+      {/* Checkout Modal */}
       {checkoutModalProduct && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <motion.div
@@ -255,7 +256,7 @@ export default function StorefrontPage() {
             <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5 text-teal-400" />
-                <h3 className="font-bold text-zinc-100">Confirm Order</h3>
+                <h3 className="font-bold text-zinc-100">Confirmar Pedido</h3>
               </div>
               <button
                 onClick={() => setCheckoutModalProduct(null)}
@@ -269,7 +270,7 @@ export default function StorefrontPage() {
               <h4 className="font-semibold text-zinc-100 text-sm">{checkoutModalProduct.title}</h4>
               <p className="text-xs text-zinc-400">{checkoutModalProduct.description}</p>
               <div className="flex justify-between items-center pt-2 text-xs font-mono">
-                <span className="text-zinc-400">License: Royalty-Free Commercial</span>
+                <span className="text-zinc-400">Licencia: Comercial Libre de Regalías</span>
                 <span className="text-teal-400 font-bold text-base">${checkoutModalProduct.price}</span>
               </div>
             </div>
@@ -280,10 +281,10 @@ export default function StorefrontPage() {
                 className="w-full py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold hover:bg-teal-300 transition-transform active:scale-98 shadow-glow flex items-center justify-center gap-2 text-sm"
               >
                 <Zap className="w-4 h-4" />
-                <span>Complete Purchase (${checkoutModalProduct.price})</span>
+                <span>Completar Compra (${checkoutModalProduct.price})</span>
               </button>
               <p className="text-[11px] text-center text-zinc-500 font-mono">
-                Instant delivery to your account downloads upon confirmation.
+                Entrega instantánea a tu panel de descargas tras confirmar.
               </p>
             </div>
           </motion.div>

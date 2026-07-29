@@ -22,11 +22,11 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: "Music Store", href: "/store", icon: ShoppingBag },
-    { label: "LMS Courses", href: "/courses", icon: BookOpen },
-    { label: "Admin Dashboard", href: "/admin/dashboard", icon: LayoutDashboard, roleRequired: "ADMIN" },
-    { label: "Course Builder", href: "/admin/courses/builder", icon: Wrench, roleRequired: "ADMIN" },
-    { label: "My Downloads", href: "/account/downloads", icon: Download },
+    { label: "Tienda Musical", href: "/store", icon: ShoppingBag },
+    { label: "Cursos LMS", href: "/courses", icon: BookOpen },
+    { label: "Panel de Control", href: "/admin/dashboard", icon: LayoutDashboard, roleRequired: "ADMIN" },
+    { label: "Creador de Cursos", href: "/admin/courses/builder", icon: Wrench, roleRequired: "ADMIN" },
+    { label: "Mis Descargas", href: "/account/downloads", icon: Download },
   ];
 
   return (
@@ -44,7 +44,7 @@ export function Navbar() {
                 SYNTHESIS<span className="text-teal-400">.AUDIO</span>
               </span>
               <span className="block text-[10px] text-zinc-400 uppercase tracking-widest -mt-1 font-sans">
-                LMS & Music Store
+                Plataforma LMS y Tienda Musical
               </span>
             </div>
           </Link>
@@ -72,22 +72,22 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right Action: Role Toggle Simulator & User Avatar */}
+          {/* Right Action: Role Toggle Simulator */}
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setUserRole(userRole === "ADMIN" ? "STUDENT" : "ADMIN")}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-teal-500/50 transition-colors"
-              title="Click to toggle perspective simulation"
+              title="Haz clic para alternar la vista de simulación de rol"
             >
               {userRole === "ADMIN" ? (
                 <>
                   <ShieldAlert className="w-3.5 h-3.5 text-teal-400" />
-                  <span>Mode: <strong className="text-teal-300">ADMIN</strong></span>
+                  <span>Modo: <strong className="text-teal-300">ADMIN</strong></span>
                 </>
               ) : (
                 <>
                   <UserCheck className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Mode: <strong className="text-purple-300">STUDENT</strong></span>
+                  <span>Modo: <strong className="text-purple-300">ESTUDIANTE</strong></span>
                 </>
               )}
             </button>

@@ -24,10 +24,8 @@ export function GlobalAudioPlayer() {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  // Simulated waveform bar heights
   const waveformBars = useMemo(() => {
     return Array.from({ length: 48 }, (_, i) => {
-      // Create pseudo-random visually realistic heights
       const seed = (i * 7 + 13) % 100;
       return Math.max(15, Math.min(100, Math.sin(i * 0.4) * 40 + seed * 0.6 + 20));
     });
@@ -72,9 +70,9 @@ export function GlobalAudioPlayer() {
               </h4>
               <p className="text-xs text-zinc-400 truncate flex items-center gap-1.5 mt-0.5">
                 <span className="inline-block px-1.5 py-0.5 text-[10px] uppercase tracking-wider rounded bg-teal-500/10 text-teal-400 border border-teal-500/30">
-                  {currentTrack.productType || "AUDIO PREVIEW"}
+                  {currentTrack.productType || "PREESCUCHA DE AUDIO"}
                 </span>
-                <span>{currentTrack.artist || "Producer Store"}</span>
+                <span>{currentTrack.artist || "Tienda de Producción"}</span>
               </p>
             </div>
           </div>
@@ -85,7 +83,7 @@ export function GlobalAudioPlayer() {
               <button
                 onClick={togglePlay}
                 className="w-10 h-10 rounded-full bg-teal-400 text-zinc-950 flex items-center justify-center hover:bg-teal-300 transition-transform active:scale-95 shadow-glow"
-                aria-label={isPlaying ? "Pause" : "Play"}
+                aria-label={isPlaying ? "Pausar" : "Reproducir"}
               >
                 {isPlaying ? (
                   <Pause className="w-5 h-5 fill-current" />
@@ -101,7 +99,6 @@ export function GlobalAudioPlayer() {
                 {formatTime(currentTime)}
               </span>
 
-              {/* Dynamic Waveform Visualization */}
               <div
                 className="relative flex-1 h-8 flex items-center gap-[2px] cursor-pointer group"
                 onClick={(e) => {
@@ -141,7 +138,7 @@ export function GlobalAudioPlayer() {
             <div className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200">
               <button
                 onClick={() => setVolume(volume === 0 ? 0.85 : 0)}
-                aria-label="Mute"
+                aria-label="Silenciar"
               >
                 {volume === 0 ? (
                   <VolumeX className="w-4 h-4 text-red-400" />

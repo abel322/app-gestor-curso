@@ -9,10 +9,7 @@ import {
   Clock, 
   Layers, 
   Sparkles, 
-  CheckCircle2, 
-  PlayCircle, 
-  ArrowRight,
-  ShieldCheck
+  ArrowRight
 } from "lucide-react";
 
 export default function CoursesPage() {
@@ -26,13 +23,13 @@ export default function CoursesPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono mb-2">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>LMS ACADEMY & MASTERCLASSES</span>
+            <span>ACADEMIA LMS Y MASTERCLASSES</span>
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
-            Sound Design & Production Masterclasses
+            Masterclasses de Producción y Diseño de Sonido
           </h1>
           <p className="text-zinc-400 text-sm mt-1 max-w-2xl">
-            Structured modules with video lessons, downloadable Serum synth presets, MIDI progression attachments, and real-time student tracking.
+            Módulos estructurados con lecciones en video, presets descargables para Serum, archivos de progresiones MIDI y seguimiento en tiempo real.
           </p>
         </div>
 
@@ -42,7 +39,7 @@ export default function CoursesPage() {
             className="px-4 py-2 rounded-xl bg-zinc-900 border border-teal-500/40 text-teal-300 text-xs font-semibold hover:bg-zinc-800 transition-colors shadow-glow flex items-center gap-2"
           >
             <Sparkles className="w-4 h-4 text-teal-400" />
-            <span>Open Content Builder</span>
+            <span>Abrir Creador de Contenido</span>
           </Link>
         </div>
       </div>
@@ -82,7 +79,7 @@ export default function CoursesPage() {
                         : "bg-amber-500/20 text-amber-300 border border-amber-500/40"
                     }`}
                   >
-                    {course.status}
+                    {course.status === "PUBLISHED" ? "PUBLICADO" : course.status === "DRAFT" ? "BORRADOR" : "PROGRAMADO"}
                   </span>
                 </div>
               </div>
@@ -100,11 +97,11 @@ export default function CoursesPage() {
                 <div className="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800/60 text-xs font-mono text-zinc-400">
                   <div className="flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-teal-400" />
-                    <span>{course.modules.length} Modules ({totalLessons} Lessons)</span>
+                    <span>{course.modules.length} Módulos ({totalLessons} Lecciones)</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-purple-400" />
-                    <span>~{durationMins} Mins Total</span>
+                    <span>~{durationMins} Mins Totales</span>
                   </div>
                 </div>
               </div>
@@ -119,7 +116,7 @@ export default function CoursesPage() {
                   href={`/courses/${course.slug}`}
                   className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 transition-transform active:scale-95 flex items-center gap-1.5 shadow-glow"
                 >
-                  <span>Start Learning</span>
+                  <span>Empezar a Aprender</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>

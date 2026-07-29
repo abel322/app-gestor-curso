@@ -2,24 +2,16 @@
 
 import React, { useState } from "react";
 import { INITIAL_COURSES, CourseMock, ModuleMock, LessonMock } from "@/lib/mock-data";
-import { motion, Reorder } from "framer-motion";
 import { 
   Wrench, 
   Plus, 
-  GripVertical, 
   Trash2, 
-  Edit3, 
   Check, 
   FilePlus, 
-  Paperclip, 
-  Sparkles, 
   Layers, 
   Save, 
   ArrowUp, 
-  ArrowDown,
-  Globe,
-  Clock,
-  Eye
+  ArrowDown
 } from "lucide-react";
 
 export default function CourseBuilderPage() {
@@ -34,11 +26,9 @@ export default function CourseBuilderPage() {
 
   const [savedNotification, setSavedNotification] = useState<boolean>(false);
 
-  // New Module modal state
   const [newModuleTitle, setNewModuleTitle] = useState("");
   const [showAddModule, setShowAddModule] = useState(false);
 
-  // New Lesson state per module
   const [addingLessonModId, setAddingLessonModId] = useState<string | null>(null);
   const [newLessonTitle, setNewLessonTitle] = useState("");
 
@@ -64,9 +54,7 @@ export default function CourseBuilderPage() {
       mods[index + 1] = temp;
     }
 
-    // re-assign orders
     mods.forEach((m, idx) => (m.order = idx + 1));
-
     updateSelectedCourseModules(mods);
   };
 
@@ -118,7 +106,7 @@ export default function CourseBuilderPage() {
         duration: 600,
         moduleId: modId,
         videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-        content: "New lesson instructions and synth parameters.",
+        content: "Instrucciones de la lección y parámetros de sintetizador.",
         attachments: [],
       };
       return { ...m, lessons: [...m.lessons, newLes] };
@@ -148,6 +136,12 @@ export default function CourseBuilderPage() {
     setTimeout(() => setSavedNotification(false), 3000);
   };
 
+  const statusOptions = [
+    { key: "DRAFT", label: "BORRADOR" },
+    { key: "PUBLISHED", label: "PUBLICADO" },
+    { key: "DRIP_SCHEDULED", label: "PROGRAMADO" },
+  ];
+
   return (
     <div className="space-y-8">
       
@@ -156,13 +150,13 @@ export default function CourseBuilderPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono mb-2">
             <Wrench className="w-3.5 h-3.5" />
-            <span>MODULE & LESSON BUILDER ENGINE</span>
+            <span>MOTOR CREADOR DE MÓDULOS Y LECCIONES</span>
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
-            Interactive Course Content Builder
+            Creador de Contenido de Cursos
           </h1>
           <p className="text-zinc-400 text-sm mt-1">
-            Drag, rank, reorder modules and lessons. Manage attachment assets and publishing release schedules.
+            Reordena módulos y lecciones, gestiona archivos adjuntos y configura estados de publicación.
           </p>
         </div>
 
@@ -172,7 +166,7 @@ export default function CourseBuilderPage() {
             className="px-5 py-2.5 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 transition-transform active:scale-95 flex items-center gap-2 shadow-glow"
           >
             <Save className="w-4 h-4" />
-            <span>Save Course Structure</span>
+            <span>Guardar Estructura</span>
           </button>
         </div>
       </div>
@@ -180,7 +174,7 @@ export default function CourseBuilderPage() {
       {savedNotification && (
         <div className="bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-xl text-emerald-300 text-xs font-mono flex items-center gap-2 shadow-glow">
           <Check className="w-4 h-4 text-emerald-400" />
-          <span>Course modules & rank order updated successfully in Prisma database state!</span>
+          <span>¡La estructura del curso y el orden de lecciones han sido guardados correctamente!</span>
         </div>
       )}
 
@@ -189,7 +183,7 @@ export default function CourseBuilderPage() {
         
         {/* Course Dropdown */}
         <div className="w-full md:w-1/2 space-y-1">
-          <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Select Course to Edit</label>
+          <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Seleccionar Curso para Editar</label>
           <select
             value={selectedCourseId}
             onChange={(e) => {
@@ -209,23 +203,23 @@ export default function CourseBuilderPage() {
 
         {/* Publishing Status Flag Controls */}
         <div className="w-full md:w-auto space-y-1">
-          <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Publishing Status Flag</label>
+          <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Estado de Publicación</label>
           <div className="flex items-center gap-2 bg-zinc-950 p-1.5 rounded-xl border border-zinc-800">
-            {(["DRAFT", "PUBLISHED", "DRIP_SCHEDULED"] as const).map((status) => (
+            {statusOptions.map((opt) => (
               <button
-                key={status}
-                onClick={() => handleStatusChange(status)}
+                key={opt.key}
+                onClick={() => handleStatusChange(opt.key as any)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
-                  courseStatus === status
-                    ? status === "PUBLISHED"
+                  courseStatus === opt.key
+                    ? opt.key === "PUBLISHED"
                       ? "bg-teal-400 text-zinc-950 shadow-glow"
-                      : status === "DRAFT"
+                      : opt.key === "DRAFT"
                       ? "bg-amber-500 text-zinc-950"
                       : "bg-purple-500 text-zinc-100 shadow-glow-purple"
                     : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
-                {status.replace("_", " ")}
+                {opt.label}
               </button>
             ))}
           </div>
@@ -233,12 +227,12 @@ export default function CourseBuilderPage() {
 
       </div>
 
-      {/* Modules Tree & Lesson List Builder */}
+      {/* Modules Tree */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
             <Layers className="w-5 h-5 text-teal-400" />
-            <span>Modules & Lesson Structure</span>
+            <span>Estructura de Módulos y Lecciones</span>
           </h2>
 
           <button
@@ -246,7 +240,7 @@ export default function CourseBuilderPage() {
             className="px-3.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-700 text-teal-300 text-xs font-semibold hover:border-teal-500/60 flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4 text-teal-400" />
-            <span>Add New Module</span>
+            <span>Añadir Nuevo Módulo</span>
           </button>
         </div>
 
@@ -254,7 +248,7 @@ export default function CourseBuilderPage() {
           <div className="glass-card p-4 rounded-xl flex gap-3 border border-teal-500/40">
             <input
               type="text"
-              placeholder="Module Title (e.g. Module 3: Advanced LFO Waveform Shaping)"
+              placeholder="Título del Módulo (ej. Módulo 3: Formas de Onda y Filtros Avanzados)"
               value={newModuleTitle}
               onChange={(e) => setNewModuleTitle(e.target.value)}
               className="flex-1 px-4 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 focus:outline-none focus:border-teal-500"
@@ -263,13 +257,13 @@ export default function CourseBuilderPage() {
               onClick={addModule}
               className="px-4 py-2 bg-teal-400 text-zinc-950 font-bold text-xs rounded-lg hover:bg-teal-300"
             >
-              Create Module
+              Crear Módulo
             </button>
             <button
               onClick={() => setShowAddModule(false)}
               className="px-3 py-2 text-zinc-400 text-xs hover:text-zinc-200"
             >
-              Cancel
+              Cancelar
             </button>
           </div>
         )}
@@ -314,7 +308,7 @@ export default function CourseBuilderPage() {
                     className="px-3 py-1 rounded-lg bg-teal-500/10 text-teal-300 border border-teal-500/30 text-xs font-mono hover:bg-teal-500/20 flex items-center gap-1"
                   >
                     <FilePlus className="w-3.5 h-3.5" />
-                    <span>+ Add Lesson</span>
+                    <span>+ Añadir Lección</span>
                   </button>
                 </div>
               </div>
@@ -324,7 +318,7 @@ export default function CourseBuilderPage() {
                 <div className="p-3 bg-zinc-950/80 border-b border-zinc-800 flex gap-2">
                   <input
                     type="text"
-                    placeholder="Lesson Title (e.g. 1.3 Sub-Bass Layering & Saturation)"
+                    placeholder="Título de la Lección (ej. 1.3 Capas de Sub-bajo y Saturación)"
                     value={newLessonTitle}
                     onChange={(e) => setNewLessonTitle(e.target.value)}
                     className="flex-1 px-3 py-1.5 rounded bg-zinc-900 border border-zinc-800 text-xs text-zinc-200"
@@ -333,18 +327,18 @@ export default function CourseBuilderPage() {
                     onClick={() => addLesson(mod.id)}
                     className="px-3 py-1.5 bg-teal-400 text-zinc-950 text-xs font-bold rounded"
                   >
-                    Save
+                    Guardar
                   </button>
                   <button
                     onClick={() => setAddingLessonModId(null)}
                     className="px-2 text-xs text-zinc-400"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                 </div>
               )}
 
-              {/* Lessons List under module */}
+              {/* Lessons List */}
               <div className="divide-y divide-zinc-800/40 bg-[#0d0f17]/40">
                 {mod.lessons.map((les, lIdx) => (
                   <div
@@ -373,11 +367,11 @@ export default function CourseBuilderPage() {
                         <h4 className="text-xs font-medium text-zinc-200">{les.title}</h4>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-[10px] font-mono text-zinc-500">
-                            Duration: {Math.round(les.duration / 60)} min
+                            Duración: {Math.round(les.duration / 60)} min
                           </span>
                           {les.attachments.length > 0 && (
                             <span className="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-1.5 rounded">
-                              📎 {les.attachments.length} attachment(s)
+                              📎 {les.attachments.length} archivo(s) adjunto(s)
                             </span>
                           )}
                         </div>
@@ -388,7 +382,7 @@ export default function CourseBuilderPage() {
                       <button
                         onClick={() => deleteLesson(mod.id, les.id)}
                         className="p-1.5 text-zinc-500 hover:text-red-400 transition-colors"
-                        title="Delete lesson"
+                        title="Eliminar lección"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -398,7 +392,7 @@ export default function CourseBuilderPage() {
                 ))}
                 {mod.lessons.length === 0 && (
                   <div className="p-4 text-center text-xs font-mono text-zinc-600">
-                    No lessons created in this module yet. Click "+ Add Lesson".
+                    Aún no hay lecciones en este módulo. Haz clic en "+ Añadir Lección".
                   </div>
                 )}
               </div>

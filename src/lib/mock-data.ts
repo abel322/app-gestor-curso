@@ -19,7 +19,7 @@ export interface LessonMock {
   videoUrl?: string;
   content?: string;
   order: number;
-  duration: number; // in seconds
+  duration: number; // en segundos
   moduleId: string;
   attachments: LessonAttachmentMock[];
 }
@@ -78,19 +78,19 @@ export interface PurchaseMock {
 }
 
 export const INITIAL_USERS: UserMock[] = [
-  { id: "usr-1", name: "Alex Producer", email: "alex@producer.com", role: "ADMIN", createdAt: "2026-01-10" },
+  { id: "usr-1", name: "Alex Productor", email: "alex@productor.com", role: "ADMIN", createdAt: "2026-01-10" },
   { id: "usr-2", name: "Elena Rostova", email: "elena@beats.io", role: "STUDENT", createdAt: "2026-02-14" },
-  { id: "usr-3", name: "Marcus Vance", email: "marcus@sounddesign.com", role: "STUDENT", createdAt: "2026-03-01" },
-  { id: "usr-4", name: "David Kim", email: "dkim@music.net", role: "STUDENT", createdAt: "2026-04-12" },
-  { id: "usr-5", name: "Sarah Connor", email: "sarah@synthwave.org", role: "CUSTOMER", createdAt: "2026-05-19" },
+  { id: "usr-3", name: "Marcos Vance", email: "marcos@diseñodesonido.com", role: "STUDENT", createdAt: "2026-03-01" },
+  { id: "usr-4", name: "David Kim", email: "dkim@musica.net", role: "STUDENT", createdAt: "2026-04-12" },
+  { id: "usr-5", name: "Sara Connor", email: "sara@synthwave.org", role: "CUSTOMER", createdAt: "2026-05-19" },
 ];
 
 export const INITIAL_COURSES: CourseMock[] = [
   {
     id: "crs-1",
-    title: "Serum Sound Design Masterclass: Modern Cyberpunk & Trap",
-    slug: "serum-sound-design-masterclass",
-    description: "Master wavetable synthesis, custom LFO routing, and neon bass design inside Xfer Serum. Includes 50+ project stems and presets.",
+    title: "Masterclass de Diseño de Sonido en Serum: Cyberpunk y Trap Moderno",
+    slug: "masterclass-diseno-sonido-serum",
+    description: "Domina la síntesis por tablas de ondas, ruteo avanzado de LFOs y diseño de bajos neón en Xfer Serum. Incluye más de 50 presets y stems de proyecto.",
     image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800&auto=format&fit=crop",
     price: 99.99,
     published: true,
@@ -99,53 +99,53 @@ export const INITIAL_COURSES: CourseMock[] = [
     modules: [
       {
         id: "mod-101",
-        title: "Module 1: Wavetable Synthesis & Custom Oscillators",
+        title: "Módulo 1: Síntesis de Tablas de Ondas y Osciladores Personalizados",
         order: 1,
         courseId: "crs-1",
         lessons: [
           {
             id: "les-1001",
-            title: "1.1 Introduction to Custom Wavetable Import & Morphing",
+            title: "1.1 Importación de Tablas de Ondas y Transiciones Suaves",
             order: 1,
             duration: 740,
             moduleId: "mod-101",
             videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            content: "Learn how to import raw audio waveforms into Xfer Serum and use the 3D Wavetable Editor to smooth out transition frames.",
+            content: "Aprende a importar formas de onda de audio puro en Xfer Serum y utilizar el editor 3D para suavizar los fotogramas de transición.",
             attachments: [
-              { id: "att-1", title: "Cyberpunk Wavetable Pack.zip", fileUrl: "#", fileType: "ZIP" },
-              { id: "att-2", title: "Lesson 1 Cheatsheet.pdf", fileUrl: "#", fileType: "PDF" },
+              { id: "att-1", title: "Pack_Tablas_Ondas_Cyberpunk.zip", fileUrl: "#", fileType: "ZIP" },
+              { id: "att-2", title: "Guia_Leccion_1.pdf", fileUrl: "#", fileType: "PDF" },
             ],
           },
           {
             id: "les-1002",
-            title: "1.2 Designing Heavy Reese Basses & FM Modulation",
+            title: "1.2 Diseño de Bajos Reese Pesados y Modulación FM",
             order: 2,
             duration: 1120,
             moduleId: "mod-101",
             videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            content: "Step-by-step FM from Osc B into Osc A, routing split filters and sub-harmonic saturation for hard-hitting basslines.",
+            content: "Paso a paso para modulación FM desde Osc B hacia Osc A, ruteo de filtros divididos y saturación sub-armónica para líneas de bajo potentes.",
             attachments: [
-              { id: "att-3", title: "Heavy_Reese_Serum_Preset.fxp", fileUrl: "#", fileType: "PRESET" },
+              { id: "att-3", title: "Bajo_Reese_Preset_Serum.fxp", fileUrl: "#", fileType: "PRESET" },
             ],
           },
         ],
       },
       {
         id: "mod-102",
-        title: "Module 2: Advanced LFO Sequences & Filter Motion",
+        title: "Módulo 2: Secuencias Avanzadas de LFO y Movimiento de Filtros",
         order: 2,
         courseId: "crs-1",
         lessons: [
           {
             id: "les-1003",
-            title: "2.1 Creating Dynamic Gated Vocal Chords",
+            title: "2.1 Creación de Acordes Vocales Rítmicos con Gate",
             order: 1,
             duration: 910,
             moduleId: "mod-102",
             videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            content: "Using grid snapping to draw complex LFO shapes for rhythm sidechaining without third-party plugins.",
+            content: "Uso del ajuste a la rejilla para diseñar patrones de LFO complejos para compresión sidechain sin plugins de terceros.",
             attachments: [
-              { id: "att-4", title: "Gated_Chord_Chords.mid", fileUrl: "#", fileType: "MIDI" },
+              { id: "att-4", title: "Progresion_Acordes.mid", fileUrl: "#", fileType: "MIDI" },
             ],
           },
         ],
@@ -154,9 +154,9 @@ export const INITIAL_COURSES: CourseMock[] = [
   },
   {
     id: "crs-2",
-    title: "Afrobeat & Amapiano Music Production Pro",
-    slug: "afrobeat-amapiano-production-pro",
-    description: "Learn log drum mixing, groove quantization, melodic marimbas, and infectious percussive layering from industry hitmakers.",
+    title: "Producción Profesional de Afrobeat y Amapiano",
+    slug: "produccion-pro-afrobeat-amapiano",
+    description: "Aprende mezcla de Log Drums, cuantización de groove, marimbas melódicas y capas de percusión contagiosas de la mano de productores reconocidos.",
     image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop",
     price: 129.99,
     published: true,
@@ -165,20 +165,20 @@ export const INITIAL_COURSES: CourseMock[] = [
     modules: [
       {
         id: "mod-201",
-        title: "Module 1: Rhythm, Percussion & Log Drum Science",
+        title: "Módulo 1: Ritmo, Percusión y Ciencia del Log Drum",
         order: 1,
         courseId: "crs-2",
         lessons: [
           {
             id: "les-2001",
-            title: "1.1 Crafting the Signature Amapiano Log Drum Bassline",
+            title: "1.1 Creación del Bajo Log Drum Característico del Amapiano",
             order: 1,
             duration: 850,
             moduleId: "mod-201",
             videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            content: "Pitch glide techniques, envelope shaping, and low-end mono cleanup for massive club sound systems.",
+            content: "Técnicas de deslizamiento de tono (pitch glide), modelado de envolventes y limpieza de frecuencias graves en mono para grandes sistemas de sonido.",
             attachments: [
-              { id: "att-5", title: "Amapiano Log Drums Starter Kit.zip", fileUrl: "#", fileType: "ZIP" },
+              { id: "att-5", title: "Kit_Log_Drums_Amapiano.zip", fileUrl: "#", fileType: "ZIP" },
             ],
           },
         ],
@@ -187,9 +187,9 @@ export const INITIAL_COURSES: CourseMock[] = [
   },
   {
     id: "crs-3",
-    title: "Mixing & Mastering with Analog Emulations",
-    slug: "mixing-mastering-analog-emulations",
-    description: "Transform muddy bedroom demos into commercial-ready masters using SSL channel strips, Neve tape saturation, and dynamic EQing.",
+    title: "Mezcla y Masterización con Emulaciones Analógicas",
+    slug: "mezcla-masterizacion-emulaciones-analogicas",
+    description: "Transforma maquetas caseras en másters listos para plataformas utilizando canales SSL, saturación de cinta Neve y ecualización dinámica.",
     image: "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?q=80&w=800&auto=format&fit=crop",
     price: 149.99,
     published: false,
@@ -198,18 +198,18 @@ export const INITIAL_COURSES: CourseMock[] = [
     modules: [
       {
         id: "mod-301",
-        title: "Module 1: Gain Staging & Vocal Mixing",
+        title: "Módulo 1: Estructura de Ganancia y Mezcla de Voces",
         order: 1,
         courseId: "crs-3",
         lessons: [
           {
             id: "les-3001",
-            title: "1.1 Vocal De-Essing, Compression & Stereo Width",
+            title: "1.1 De-Essing Vocal, Compresión y Amplitud Estéreo",
             order: 1,
             duration: 1200,
             moduleId: "mod-301",
             videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            content: "Carving space for lead vocals in dense electronic mixdowns.",
+            content: "Cómo abrir espacio para las voces principales en mezclas electrónicas densas.",
             attachments: [],
           },
         ],
@@ -221,12 +221,12 @@ export const INITIAL_COURSES: CourseMock[] = [
 export const INITIAL_MUSIC_PRODUCTS: MusicProductMock[] = [
   {
     id: "mp-1",
-    title: "CYBERPUNK 2099 - Beats & Stems Pack",
+    title: "CYBERPUNK 2099 - Pack de Beats y Stems",
     slug: "cyberpunk-2099-beats-stems",
-    description: "Hard-hitting synthwave, dark midtempo, and futuristic industrial beat stems with full commercial license.",
+    description: "Stems de producción para synthwave, midtempo oscuro e industrial futurista con licencia comercial completa.",
     price: 34.99,
     bpm: 120,
-    key: "F# Minor",
+    key: "Fa# Menor",
     audioDemoUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=cyberpunk-beat-120bpm.mp3",
     downloadZipUrl: "#",
     productType: "BEAT",
@@ -234,9 +234,9 @@ export const INITIAL_MUSIC_PRODUCTS: MusicProductMock[] = [
   },
   {
     id: "mp-2",
-    title: "NEON SYNTHWAVE V1 - Serum Presets",
+    title: "NEON SYNTHWAVE V1 - Presets para Serum",
     slug: "neon-synthwave-v1-serum",
-    description: "64 Lush analog pads, retro arps, punchy synth brass, and 80s plucks carefully tuned for modern retro pop.",
+    description: "64 Pads analógicos, arpegios retro, metales synth y plucks de los 80 ajustados para pop retro moderno.",
     price: 24.99,
     bpm: undefined,
     key: undefined,
@@ -247,12 +247,12 @@ export const INITIAL_MUSIC_PRODUCTS: MusicProductMock[] = [
   },
   {
     id: "mp-3",
-    title: "AFROGROOVE VOL. 3 - Percussion & Samples",
-    slug: "afrogroove-vol-3-percussion",
-    description: "Over 450+ 24-bit WAV drums, shaking shakers, log drum shots, dynamic vocal chops, and organic loops.",
+    title: "AFROGROOVE VOL. 3 - Percusión y Librería de Samples",
+    slug: "afrogroove-vol-3-percusión",
+    description: "Más de 450+ sonidos WAV a 24-bits, maracas, golpes de log drum, chops vocales dinámicos y bucles orgánicos.",
     price: 29.99,
     bpm: 112,
-    key: "A Minor",
+    key: "La Menor",
     audioDemoUrl: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=afrobeats-loop.mp3",
     downloadZipUrl: "#",
     productType: "SAMPLE_PACK",
@@ -260,12 +260,12 @@ export const INITIAL_MUSIC_PRODUCTS: MusicProductMock[] = [
   },
   {
     id: "mp-4",
-    title: "CHORD MAESTRO - 100+ Neo-Soul MIDI Progression Kits",
-    slug: "chord-maestro-midi-kits",
-    description: "Pro 7th, 9th, and 11th chord progressions in all 12 keys. Instantly boost your songwriting workflow.",
+    title: "CHORD MAESTRO - 100+ Kits de Progresiones MIDI Neo-Soul",
+    slug: "chord-maestro-kits-midi",
+    description: "Progresiones de acordes de 7ma, 9na y 11na en las 12 tonalidades. Acelera tu flujo de trabajo de composición.",
     price: 19.99,
     bpm: 95,
-    key: "C Major",
+    key: "Do Mayor",
     audioDemoUrl: "https://cdn.pixabay.com/download/audio/2022/08/02/audio_884b9c1d21.mp3?filename=rnb-midi-preview.mp3",
     downloadZipUrl: "#",
     productType: "MIDI",

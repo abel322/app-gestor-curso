@@ -2,18 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { INITIAL_COURSES, LessonMock } from "@/lib/mock-data";
-import { motion } from "framer-motion";
 import { 
-  PlayCircle, 
   CheckCircle2, 
   Download, 
   FileText, 
   MessageSquare, 
   ArrowLeft, 
   ArrowRight,
-  Sparkles,
   Layers,
   Check,
   Disc
@@ -21,13 +18,11 @@ import {
 
 export default function LessonPlayerPage() {
   const params = useParams();
-  const router = useRouter();
   const slug = params.slug as string;
   const lessonId = params.lessonId as string;
 
   const course = INITIAL_COURSES.find((c) => c.slug === slug) || INITIAL_COURSES[0];
 
-  // Find active lesson & module
   let currentLesson: LessonMock | null = null;
   let currentModuleTitle = "";
 
@@ -48,7 +43,6 @@ export default function LessonPlayerPage() {
   const [completed, setCompleted] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"NOTES" | "ATTACHMENTS" | "DISCUSSION">("NOTES");
 
-  // Flatten all lessons to enable Next/Prev navigation
   const allLessons = course.modules.flatMap((m) => m.lessons);
   const currentIndex = allLessons.findIndex((l) => l.id === currentLesson?.id);
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
@@ -64,7 +58,7 @@ export default function LessonPlayerPage() {
           className="flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-teal-400 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>BACK TO SYLLABUS</span>
+          <span>VOLVER AL TEMARIO</span>
         </Link>
 
         <div className="flex items-center gap-3">
@@ -79,25 +73,25 @@ export default function LessonPlayerPage() {
             {completed ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>COMPLETED</span>
+                <span>COMPLETADO</span>
               </>
             ) : (
               <>
                 <CheckCircle2 className="w-3.5 h-3.5 text-zinc-500" />
-                <span>MARK AS COMPLETE</span>
+                <span>MARCAR COMO COMPLETADO</span>
               </>
             )}
           </button>
         </div>
       </div>
 
-      {/* Main Grid: Video/Content Area + Lesson Drawer */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Left Column: Video & Tabs */}
+        {/* Left Column */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* Video Container */}
+          {/* Video Player */}
           <div className="relative rounded-2xl overflow-hidden bg-black border border-zinc-800/80 aspect-video shadow-2xl">
             {currentLesson?.videoUrl ? (
               <iframe
@@ -110,8 +104,8 @@ export default function LessonPlayerPage() {
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-zinc-950">
                 <Disc className="w-12 h-12 text-teal-400 animate-spin mb-3" />
-                <h3 className="text-zinc-200 font-semibold">Audio/Video Lesson Player</h3>
-                <p className="text-zinc-500 text-xs mt-1">Select a video lesson or audio stem to start playback.</p>
+                <h3 className="text-zinc-200 font-semibold">Reproductor de Video / Audio</h3>
+                <p className="text-zinc-500 text-xs mt-1">Selecciona una lección para iniciar la reproducción.</p>
               </div>
             )}
           </div>
@@ -137,7 +131,7 @@ export default function LessonPlayerPage() {
               }`}
             >
               <FileText className="w-4 h-4" />
-              <span>Lesson Notes</span>
+              <span>Notas de la Lección</span>
             </button>
 
             <button
@@ -149,7 +143,7 @@ export default function LessonPlayerPage() {
               }`}
             >
               <Download className="w-4 h-4" />
-              <span>Attachments ({currentLesson?.attachments.length || 0})</span>
+              <span>Archivos Adjuntos ({currentLesson?.attachments.length || 0})</span>
             </button>
 
             <button
@@ -161,7 +155,7 @@ export default function LessonPlayerPage() {
               }`}
             >
               <MessageSquare className="w-4 h-4" />
-              <span>Discussion</span>
+              <span>Discusión</span>
             </button>
           </div>
 
@@ -194,12 +188,12 @@ export default function LessonPlayerPage() {
                         className="px-3 py-1 rounded bg-purple-500/20 text-purple-300 text-xs font-mono hover:bg-purple-500/30 transition-colors flex items-center gap-1.5"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        <span>Download</span>
+                        <span>Descargar</span>
                       </a>
                     </div>
                   ))
                 ) : (
-                  <p className="text-zinc-500 text-xs font-mono">No files attached to this lesson.</p>
+                  <p className="text-zinc-500 text-xs font-mono">No hay archivos adjuntos en esta lección.</p>
                 )}
               </div>
             )}
@@ -208,15 +202,15 @@ export default function LessonPlayerPage() {
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-xs">
-                    EP
+                    ER
                   </div>
                   <div className="flex-1 bg-zinc-900 p-3 rounded-xl border border-zinc-800 space-y-1">
                     <div className="flex justify-between items-center text-xs font-mono">
                       <span className="text-zinc-200 font-semibold">Elena Rostova</span>
-                      <span className="text-zinc-500">2 hours ago</span>
+                      <span className="text-zinc-500">Hace 2 horas</span>
                     </div>
                     <p className="text-xs text-zinc-300">
-                      Great explanation on the FM modulation depth! What setting works best for sub mono-incompatibility?
+                      ¡Excelente explicación sobre la profundidad de modulación FM! ¿Qué ajuste funciona mejor para evitar la incompatibilidad mono en subgraves?
                     </p>
                   </div>
                 </div>
@@ -224,11 +218,11 @@ export default function LessonPlayerPage() {
                 <div className="flex gap-2 pt-2">
                   <input
                     type="text"
-                    placeholder="Ask a question or share feedback..."
+                    placeholder="Haz una pregunta o comparte tu comentario..."
                     className="flex-1 px-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 focus:outline-none focus:border-teal-500/60"
                   />
                   <button className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300">
-                    Post
+                    Publicar
                   </button>
                 </div>
               </div>
@@ -243,7 +237,7 @@ export default function LessonPlayerPage() {
                 className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Prev: {prevLesson.title}</span>
+                <span>Anterior: {prevLesson.title}</span>
               </Link>
             ) : (
               <div />
@@ -254,7 +248,7 @@ export default function LessonPlayerPage() {
                 href={`/courses/${course.slug}/lessons/${nextLesson.id}`}
                 className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 shadow-glow flex items-center gap-2"
               >
-                <span>Next: {nextLesson.title}</span>
+                <span>Siguiente: {nextLesson.title}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             ) : (
@@ -264,12 +258,12 @@ export default function LessonPlayerPage() {
 
         </div>
 
-        {/* Right Column: Course Sidebar Playlist */}
+        {/* Right Column */}
         <div className="space-y-4">
           <div className="glass-card rounded-2xl p-4 border border-zinc-800/80 space-y-4">
             <h3 className="font-bold text-sm text-zinc-200 font-mono uppercase tracking-wider flex items-center gap-2">
               <Layers className="w-4 h-4 text-teal-400" />
-              <span>Course Playlist</span>
+              <span>Lista de Lecciones</span>
             </h3>
 
             <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
@@ -292,7 +286,7 @@ export default function LessonPlayerPage() {
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <PlayCircle className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-teal-400" : "text-zinc-500"}`} />
+                            <Disc className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-teal-400 animate-spin" : "text-zinc-500"}`} />
                             <span className="truncate">{les.title}</span>
                           </div>
                           <span className="font-mono text-[10px] text-zinc-500">

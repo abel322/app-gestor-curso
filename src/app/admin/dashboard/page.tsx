@@ -14,7 +14,6 @@ import {
   Headphones, 
   Sparkles, 
   Wrench, 
-  Layers,
   ArrowUpRight,
   ShieldCheck
 } from "lucide-react";
@@ -25,7 +24,6 @@ export default function AdminDashboardPage() {
   const [users] = useState(INITIAL_USERS);
   const [progress] = useState(INITIAL_PROGRESS);
 
-  // Calculations for KPIs
   const totalRevenue = purchases
     .filter((p) => p.status === "COMPLETED")
     .reduce((acc, p) => acc + p.amount, 0);
@@ -37,25 +35,23 @@ export default function AdminDashboardPage() {
 
   const stuckStudents = progress.filter((p) => !p.completed).length;
 
-  // Retention curve mockup data per lesson step
   const retentionCurve = [
-    { lesson: "L 1.1 Intro", retention: 100 },
-    { lesson: "L 1.2 FM Reese", retention: 92 },
-    { lesson: "L 2.1 Gated Chords", retention: 84 },
-    { lesson: "L 2.2 Sub Clean", retention: 76 },
-    { lesson: "L 3.1 SSL Staging", retention: 68 },
-    { lesson: "L 3.2 Tape Saturation", retention: 61 },
+    { lesson: "L 1.1 Introducción", retention: 100 },
+    { lesson: "L 1.2 Bajos Reese FM", retention: 92 },
+    { lesson: "L 2.1 Acordes Rítmicos", retention: 84 },
+    { lesson: "L 2.2 Limpieza de Graves", retention: 76 },
+    { lesson: "L 3.1 Canales SSL", retention: 68 },
+    { lesson: "L 3.2 Saturación de Cinta", retention: 61 },
   ];
 
-  // Weekly streaming metrics mockup
   const weeklyStreams = [
-    { day: "Mon", streams: 420 },
-    { day: "Tue", streams: 680 },
-    { day: "Wed", streams: 890 },
-    { day: "Thu", streams: 740 },
-    { day: "Fri", streams: 1120 },
-    { day: "Sat", streams: 1450 },
-    { day: "Sun", streams: 1290 },
+    { day: "Lun", streams: 420 },
+    { day: "Mar", streams: 680 },
+    { day: "Mié", streams: 890 },
+    { day: "Jue", streams: 740 },
+    { day: "Vie", streams: 1120 },
+    { day: "Sáb", streams: 1450 },
+    { day: "Dom", streams: 1290 },
   ];
 
   return (
@@ -66,13 +62,13 @@ export default function AdminDashboardPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono mb-2">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>ADMIN PLATFORM CONTROL</span>
+            <span>CONTROL ADMINISTRATIVO DE PLATAFORMA</span>
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
-            Course Analytics & Revenue Dashboard
+            Panel de Métricas (KPI) y Métricas de Ingresos
           </h1>
           <p className="text-zinc-400 text-sm mt-1">
-            Real-time telemetry on student progression, course completion drop-offs, and audio storefront sales.
+            Telemetría en tiempo real sobre la progresión de alumnos, abandono de cursos y ventas de la tienda musical.
           </p>
         </div>
 
@@ -82,14 +78,14 @@ export default function AdminDashboardPage() {
             className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 transition-transform active:scale-95 flex items-center gap-2 shadow-glow"
           >
             <Wrench className="w-4 h-4" />
-            <span>Course Content Builder</span>
+            <span>Creador de Cursos</span>
           </Link>
           <Link
             href="/admin/students"
             className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-2"
           >
             <Users className="w-4 h-4 text-purple-400" />
-            <span>Student Matrix</span>
+            <span>Matriz de Estudiantes</span>
           </Link>
         </div>
       </div>
@@ -105,7 +101,7 @@ export default function AdminDashboardPage() {
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Total Gross Revenue</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Ingresos Brutos Totales</span>
             <div className="w-9 h-9 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shadow-glow">
               <DollarSign className="w-5 h-5 text-teal-400" />
             </div>
@@ -115,7 +111,7 @@ export default function AdminDashboardPage() {
           </div>
           <div className="flex items-center gap-1.5 text-xs text-teal-400 font-mono">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>+18.4% this month</span>
+            <span>+18.4% este mes</span>
           </div>
         </motion.div>
 
@@ -128,7 +124,7 @@ export default function AdminDashboardPage() {
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Active Students</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Estudiantes Activos</span>
             <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center shadow-glow-purple">
               <Users className="w-5 h-5 text-purple-400" />
             </div>
@@ -137,7 +133,7 @@ export default function AdminDashboardPage() {
             {activeStudents}
           </div>
           <div className="text-xs text-zinc-400 font-mono">
-            Enrolled in active cohorts
+            Inscritos en cohortes activas
           </div>
         </motion.div>
 
@@ -149,7 +145,7 @@ export default function AdminDashboardPage() {
           className="glass-card rounded-2xl p-6 relative overflow-hidden space-y-3"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Avg Completion Rate</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Tasa de Finalización Promedio</span>
             <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
             </div>
@@ -173,7 +169,7 @@ export default function AdminDashboardPage() {
           className="glass-card rounded-2xl p-6 relative overflow-hidden space-y-3 border-amber-500/30"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Stuck Student Alerts</span>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Alertas de Alumnos Atascados</span>
             <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
               <AlertTriangle className="w-5 h-5 text-amber-400 animate-pulse" />
             </div>
@@ -182,7 +178,7 @@ export default function AdminDashboardPage() {
             {stuckStudents}
           </div>
           <div className="text-xs text-amber-300/80 font-mono">
-            Requires follow-up intervention
+            Requiere intervención de soporte
           </div>
         </motion.div>
 
@@ -197,12 +193,12 @@ export default function AdminDashboardPage() {
             <div>
               <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-teal-400" />
-                <span>Course Retention Curve (%)</span>
+                <span>Curva de Retención de Cursos (%)</span>
               </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">Lesson-by-lesson student drop-off rate</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Tasa de retención lección por lección</p>
             </div>
             <span className="text-xs font-mono text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded border border-teal-500/20">
-              Serum Masterclass
+              Masterclass de Serum
             </span>
           </div>
 
@@ -232,12 +228,12 @@ export default function AdminDashboardPage() {
             <div>
               <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
                 <Headphones className="w-4 h-4 text-purple-400" />
-                <span>Global Audio Player Streams</span>
+                <span>Reproducciones del Motor de Audio</span>
               </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">Weekly beat & sample audition activity</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Actividad semanal de preescuchas de beats y samples</p>
             </div>
             <span className="text-xs font-mono text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded border border-purple-500/20">
-              7,590 Total Plays
+              7,590 Reproducciones Totales
             </span>
           </div>
 
@@ -263,15 +259,15 @@ export default function AdminDashboardPage() {
 
       </div>
 
-      {/* Transaction & Activity Log */}
+      {/* Transaction Log */}
       <div className="glass-card rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
           <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-teal-400" />
-            <span>Recent Platform Purchases</span>
+            <span>Compras Recientes en la Plataforma</span>
           </h3>
           <Link href="/store" className="text-xs font-mono text-teal-400 hover:underline flex items-center gap-1">
-            <span>View Catalog</span>
+            <span>Ver Catálogo</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -281,7 +277,7 @@ export default function AdminDashboardPage() {
             <div key={p.id} className="py-3 flex items-center justify-between text-xs">
               <div className="flex items-center gap-3">
                 <span className="px-2 py-0.5 rounded font-mono uppercase bg-teal-500/10 text-teal-400 border border-teal-500/30">
-                  {p.productType}
+                  {p.productType === "COURSE" ? "CURSO" : "RECURSO MUSICAL"}
                 </span>
                 <span className="text-zinc-200 font-mono">{p.id}</span>
                 <span className="text-zinc-400">Ref: {p.referenceId}</span>
@@ -290,7 +286,7 @@ export default function AdminDashboardPage() {
                 <span className="text-zinc-400">{p.createdAt}</span>
                 <span className="text-teal-400 font-bold">${p.amount}</span>
                 <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                  {p.status}
+                  COMPLETADO
                 </span>
               </div>
             </div>

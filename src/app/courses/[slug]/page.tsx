@@ -4,17 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { INITIAL_COURSES } from "@/lib/mock-data";
-import { motion } from "framer-motion";
 import { 
   BookOpen, 
   Clock, 
   Layers, 
   PlayCircle, 
-  CheckCircle2, 
-  FileText, 
-  Download, 
   ArrowLeft,
-  Sparkles,
   Award
 } from "lucide-react";
 
@@ -35,7 +30,7 @@ export default function CourseDetailPage() {
         className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-teal-400 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
-        <span>BACK TO COURSE CATALOG</span>
+        <span>VOLVER AL CATÁLOGO DE CURSOS</span>
       </Link>
 
       {/* Hero Overview Header */}
@@ -43,7 +38,7 @@ export default function CourseDetailPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono">
             <Award className="w-3.5 h-3.5" />
-            <span>FULL ACCREDITED CURRICULUM</span>
+            <span>PLAN DE ESTUDIOS COMPLETO ACCREDITADO</span>
           </div>
 
           <h1 className="text-2xl md:text-4xl font-extrabold text-zinc-100 tracking-tight leading-tight">
@@ -57,11 +52,11 @@ export default function CourseDetailPage() {
           <div className="flex flex-wrap gap-4 pt-2 text-xs font-mono text-zinc-300">
             <span className="flex items-center gap-1.5 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
               <Layers className="w-4 h-4 text-teal-400" />
-              {course.modules.length} Modules ({totalLessons} Lessons)
+              {course.modules.length} Módulos ({totalLessons} Lecciones)
             </span>
             <span className="flex items-center gap-1.5 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
               <Clock className="w-4 h-4 text-purple-400" />
-              On-demand HD Video + Presets
+              Video HD Bajo Demanda + Presets
             </span>
           </div>
         </div>
@@ -77,11 +72,11 @@ export default function CourseDetailPage() {
             className="w-full py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold hover:bg-teal-300 transition-transform active:scale-95 flex items-center justify-center gap-2 text-sm shadow-glow"
           >
             <PlayCircle className="w-5 h-5 fill-current" />
-            <span>Enter Lesson Player</span>
+            <span>Entrar al Reproductor de Lecciones</span>
           </Link>
 
           <p className="text-[11px] text-zinc-500 font-mono">
-            Includes lifetime access to future module updates & MIDI assets.
+            Incluye acceso de por vida y futuras actualizaciones de módulos.
           </p>
         </div>
       </div>
@@ -90,7 +85,7 @@ export default function CourseDetailPage() {
       <div className="space-y-6">
         <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
           <BookOpen className="w-5 h-5 text-teal-400" />
-          <span>Course Modules & Syllabus</span>
+          <span>Módulos del Curso y Temario</span>
         </h2>
 
         <div className="space-y-4">
@@ -110,7 +105,7 @@ export default function CourseDetailPage() {
                   </h3>
                 </div>
                 <span className="text-xs font-mono text-zinc-500">
-                  {mod.lessons.length} Lessons
+                  {mod.lessons.length} Lecciones
                 </span>
               </div>
 
