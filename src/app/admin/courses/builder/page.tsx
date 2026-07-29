@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { INITIAL_COURSES, CourseMock, ModuleMock, LessonMock, LessonAttachmentMock } from "@/lib/mock-data";
 import { 
@@ -21,7 +21,15 @@ import {
   BookOpen,
   Sparkles,
   Edit,
-  ExternalLink
+  ExternalLink,
+  Mic,
+  MicOff,
+  Clock,
+  FileText,
+  Volume2,
+  Lock,
+  Unlock,
+  CheckCircle2
 } from "lucide-react";
 
 export default function CourseBuilderPage() {
@@ -54,15 +62,111 @@ export default function CourseBuilderPage() {
   const [newLessonTitle, setNewLessonTitle] = useState("");
   const [newLessonVideoUrl, setNewLessonVideoUrl] = useState("https://www.youtube.com/embed/dQw4w9WgXcQ");
 
-  // Modal para editar detalles y archivos adjuntos de lección
+  // Modal para editar detalles avanzados y archivos adjuntos de lección
   const [editingLesson, setEditingLesson] = useState<{ modId: string; lesson: LessonMock } | null>(null);
   const [newAttTitle, setNewAttTitle] = useState("");
   const [newAttFileType, setNewAttFileType] = useState<'ZIP' | 'MIDI' | 'PRESET' | 'PDF'>("ZIP");
   const [newAttUrl, setNewAttUrl] = useState("#");
 
+  // 🎙️ Speech-to-Text (Dictado por Voz) State & Ref
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(true);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        setSpeechSupported(false);
+      }
+    }
+  }, []);
+
   const notify = (msg: string) => {
     setSavedNotification(msg);
     setTimeout(() => setSavedNotification(null), 4000);
+  };
+
+  // Toggle Speech-to-Text Dictation (es-ES)
+  const toggleSpeechRecognition = () => {
+    if (isListening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsListening(false);
+      return;
+    }
+
+    if (typeof window === "undefined") return;
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      notify("⚠️ Tu navegador no soporta Dictado por Voz nativo. Te recomendamos usar Google Chrome, Microsoft Edge o Safari.");
+      setSpeechSupported(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "es-ES";
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        notify("🎙️ Dictado por voz activado en español. Empieza a hablar...");
+      };
+
+      recognition.onresult = (event: any) => {
+        let currentTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcriptChunk = event.results[i][0].transcript;
+          currentTranscript += transcriptChunk;
+        }
+
+        if (editingLesson && currentTranscript) {
+          setEditingLesson((prev) => {
+            if (!prev) return null;
+            const existingContent = prev.lesson.content || "";
+            // Append transcribed text cleanly
+            const updatedContent = existingContent
+              ? existingContent.endsWith(" ")
+                ? existingContent + currentTranscript
+                : existingContent + " " + currentTranscript
+              : currentTranscript;
+
+            return {
+              ...prev,
+              lesson: {
+                ...prev.lesson,
+                content: updatedContent,
+              },
+            };
+          });
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error("Speech Recognition Error:", event.error);
+        setIsListening(false);
+        if (event.error !== "no-speech") {
+          notify(`⚠️ Error en dictado de voz: ${event.error}`);
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error("Could not start Speech Recognition:", err);
+      setIsListening(false);
+    }
   };
 
   // 1. Alternar Publicación ("🚀 Publicar en Tienda Web")
@@ -110,18 +214,19 @@ export default function CourseBuilderPage() {
       modules: [
         {
           id: `mod-${Date.now()}-1`,
-          title: "Módulo 1: Introducción y Fundamentos",
+          title: "Módulo 1: Ecualización y Balance",
           order: 1,
           courseId: `crs-${Date.now()}`,
           lessons: [
             {
               id: `les-${Date.now()}-1`,
-              title: "Lección 1.1: Descripción General",
+              title: "Lección 1.1: Limpieza de Frecuencias y Filtros Paso Alto",
               order: 1,
-              duration: 600,
+              duration: 840,
+              isFreePreview: true,
               moduleId: `mod-${Date.now()}-1`,
               videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-              content: "Bienvenido al curso. Revisa los archivos adjuntos.",
+              content: "Bienvenido al curso. Revisa los archivos adjuntos y la explicación teórica.",
               attachments: [],
             },
           ],
@@ -206,7 +311,7 @@ export default function CourseBuilderPage() {
     notify("Módulo eliminado.");
   };
 
-  // 7. Añadir Lección
+  // 7. Añadir Lección Inline
   const addLesson = (modId: string) => {
     if (!newLessonTitle.trim()) return;
     const mods = selectedCourse.modules.map((m) => {
@@ -216,9 +321,10 @@ export default function CourseBuilderPage() {
         title: newLessonTitle,
         order: m.lessons.length + 1,
         duration: 600,
+        isFreePreview: false,
         moduleId: modId,
         videoUrl: newLessonVideoUrl || "https://www.youtube.com/embed/dQw4w9WgXcQ",
-        content: "Contenido y explicaciones detalladas de la lección.",
+        content: "Explicación detallada de la lección. Puedes usar dictado por voz para agregar notas.",
         attachments: [],
       };
       return { ...m, lessons: [...m.lessons, newLes] };
@@ -244,6 +350,11 @@ export default function CourseBuilderPage() {
   const handleSaveLessonModal = () => {
     if (!editingLesson) return;
 
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+
     const mods = selectedCourse.modules.map((m) => {
       if (m.id !== editingLesson.modId) return m;
       const updatedLessons = m.lessons.map((l) =>
@@ -254,7 +365,7 @@ export default function CourseBuilderPage() {
 
     updateSelectedCourseModules(mods);
     setEditingLesson(null);
-    notify("Detalles y adjuntos de lección actualizados.");
+    notify("Detalles, dictado por voz y recursos adjuntos guardados.");
   };
 
   // 10. Añadir Archivo Adjunto a Lección
@@ -310,13 +421,13 @@ export default function CourseBuilderPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono mb-2">
             <Wrench className="w-3.5 h-3.5" />
-            <span>LMS ADMIN STUDIO • CREATOR ENGINE</span>
+            <span>LMS ADMIN STUDIO • ADVANCED LESSON EDITOR</span>
           </div>
           <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
             Panel de Creación y Estructuración de Cursos
           </h1>
           <p className="text-zinc-400 text-sm mt-1">
-            Diseña el temario por módulos y lecciones, adjunta recursos descargables (stems, MIDI, presets, PDFs) y controla la publicación en la tienda web.
+            Diseña el temario por módulos y lecciones, dictado por voz (Speech-to-Text es-ES), adjunta recursos descargables (stems WAV, MIDI, presets, PDFs) y controla la publicación en la tienda.
           </p>
         </div>
 
@@ -370,7 +481,7 @@ export default function CourseBuilderPage() {
                 const found = courses.find((c) => c.id === e.target.value);
                 if (found) setCourseStatus(found.status);
               }}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm font-bold focus:outline-none focus:border-teal-500/60 shadow-inner"
+              className="w-full px-4 py-3 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-sm font-bold focus:outline-none focus:border-teal-500/60 shadow-inner"
             >
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -381,7 +492,7 @@ export default function CourseBuilderPage() {
           </div>
 
           {/* Right: Primary Action "🚀 Publicar en Tienda Web" */}
-          <div className="w-full lg:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+          <div className="w-full lg:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-[#111319] p-4 rounded-xl border border-zinc-800">
             <div>
               <div className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Estado en la Tienda</div>
               <div className="flex items-center gap-2 mt-1">
@@ -416,21 +527,21 @@ export default function CourseBuilderPage() {
 
         {/* Selected Course Overview Card */}
         <div className="pt-4 border-t border-zinc-800/60 grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-mono">
-          <div className="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
+          <div className="bg-[#111319] p-3 rounded-xl border border-zinc-800/80">
             <span className="text-zinc-500 block">ID del Curso</span>
             <span className="text-zinc-200 font-bold">{selectedCourse.id}</span>
           </div>
-          <div className="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
+          <div className="bg-[#111319] p-3 rounded-xl border border-zinc-800/80">
             <span className="text-zinc-500 block">Módulos Totales</span>
             <span className="text-teal-400 font-bold">{selectedCourse.modules.length} Módulos</span>
           </div>
-          <div className="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80">
+          <div className="bg-[#111319] p-3 rounded-xl border border-zinc-800/80">
             <span className="text-zinc-500 block">Lecciones Totales</span>
             <span className="text-purple-400 font-bold">
               {selectedCourse.modules.reduce((acc, m) => acc + m.lessons.length, 0)} Lecciones
             </span>
           </div>
-          <div className="bg-zinc-950/60 p-3 rounded-xl border border-zinc-800/80 flex items-center justify-between">
+          <div className="bg-[#111319] p-3 rounded-xl border border-zinc-800/80 flex items-center justify-between">
             <div>
               <span className="text-zinc-500 block">Precio Público</span>
               <span className="text-zinc-100 font-bold">${selectedCourse.price} USD</span>
@@ -477,7 +588,7 @@ export default function CourseBuilderPage() {
               placeholder="Ej: Módulo 1: Ecualización y Balance"
               value={newModuleTitle}
               onChange={(e) => setNewModuleTitle(e.target.value)}
-              className="flex-1 px-4 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 focus:outline-none focus:border-teal-500"
+              className="flex-1 px-4 py-2.5 rounded-lg bg-[#111319] border border-zinc-800 text-xs text-zinc-200 focus:outline-none focus:border-teal-500"
             />
             <div className="flex gap-2">
               <button
@@ -553,7 +664,7 @@ export default function CourseBuilderPage() {
 
               {/* Add Lesson Inline Form */}
               {addingLessonModId === mod.id && (
-                <div className="p-4 bg-zinc-950/90 border-b border-zinc-800 space-y-3">
+                <div className="p-4 bg-[#111319] border-b border-zinc-800 space-y-3">
                   <div className="text-xs font-mono text-teal-400">Nueva Lección para "{mod.title}"</div>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
@@ -614,6 +725,11 @@ export default function CourseBuilderPage() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-zinc-100">{les.title}</h4>
+                          {les.isFreePreview && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 shadow-glow">
+                              <Eye className="w-3 h-3" /> Vista Previa Gratis
+                            </span>
+                          )}
                           {les.videoUrl && (
                             <span className="inline-flex items-center gap-1 text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-1.5 py-0.5 rounded border border-cyan-500/20">
                               <Video className="w-3 h-3" /> Vídeo
@@ -621,7 +737,10 @@ export default function CourseBuilderPage() {
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-zinc-400">
-                          <span>Duración: {Math.round(les.duration / 60)} min</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-zinc-500" />
+                            <span>{Math.round(les.duration / 60)} min</span>
+                          </span>
                           {les.attachments.length > 0 ? (
                             <span className="text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/30 flex items-center gap-1">
                               <Paperclip className="w-3 h-3 text-purple-400" />
@@ -637,10 +756,10 @@ export default function CourseBuilderPage() {
                     <div className="flex items-center gap-2 self-end sm:self-center">
                       <button
                         onClick={() => setEditingLesson({ modId: mod.id, lesson: { ...les } })}
-                        className="px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-200 border border-zinc-700 text-xs font-mono hover:bg-zinc-700 flex items-center gap-1.5 transition-colors"
+                        className="px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-teal-300 border border-teal-500/40 text-xs font-mono flex items-center gap-2 transition-all shadow-glow"
                       >
                         <Edit className="w-3.5 h-3.5 text-teal-400" />
-                        <span>Editar Adjuntos & Video</span>
+                        <span>🎙️ Editar Lección & Dictado</span>
                       </button>
 
                       <button
@@ -696,7 +815,7 @@ export default function CourseBuilderPage() {
                   placeholder="Ej: Curso Profesional de Mezcla de Sonido"
                   value={newCourseTitle}
                   onChange={(e) => setNewCourseTitle(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500"
                 />
               </div>
 
@@ -707,7 +826,7 @@ export default function CourseBuilderPage() {
                   placeholder="Aprende ecualización quirúrgica, compresión dinámicas y mezcla espacial..."
                   value={newCourseDescription}
                   onChange={(e) => setNewCourseDescription(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500 font-sans"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500 font-sans"
                 />
               </div>
 
@@ -719,7 +838,7 @@ export default function CourseBuilderPage() {
                     step="0.01"
                     value={newCoursePrice}
                     onChange={(e) => setNewCoursePrice(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500"
                   />
                 </div>
                 <div className="space-y-1">
@@ -728,7 +847,7 @@ export default function CourseBuilderPage() {
                     type="text"
                     value={newCourseImage}
                     onChange={(e) => setNewCourseImage(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-purple-500"
                   />
                 </div>
               </div>
@@ -757,29 +876,49 @@ export default function CourseBuilderPage() {
         </div>
       )}
 
-      {/* Modal 2: Editar Lección y Gestionar Archivos Adjuntos (WAV, MIDI, Presets, PDF) */}
+      {/* Modal 2: EDITOR AVANZADO DE LECCIONES CON DICTADO POR VOZ (Speech-to-Text) Y ADJUNTOS */}
       {editingLesson && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card max-w-2xl w-full p-6 rounded-2xl border border-zinc-800 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-card max-w-3xl w-full p-6 rounded-2xl border border-zinc-800 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 max-h-[92vh] overflow-y-auto bg-[#0d0f17]">
+            
+            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
               <div>
-                <h3 className="text-lg font-extrabold text-zinc-100 flex items-center gap-2">
-                  <Paperclip className="w-5 h-5 text-teal-400" />
-                  <span>Editor de Lección y Recursos Adjuntos</span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-teal-500/10 text-teal-400 border border-teal-500/30 uppercase">
+                    Editor de Lección Avanzado
+                  </span>
+                  {isListening && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-red-500/20 text-red-400 border border-red-500/50 animate-pulse flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                      <span>ESCUCHANDO MICRÓFONO...</span>
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-xl font-extrabold text-zinc-100 mt-1">
+                  {editingLesson.lesson.title || "Configurar Lección"}
                 </h3>
-                <p className="text-xs text-zinc-400 font-mono mt-0.5">{editingLesson.lesson.title}</p>
               </div>
-              <button onClick={() => setEditingLesson(null)} className="text-zinc-400 hover:text-zinc-100">
-                <X className="w-5 h-5" />
+              <button
+                onClick={() => {
+                  if (isListening && recognitionRef.current) recognitionRef.current.stop();
+                  setIsListening(false);
+                  setEditingLesson(null);
+                }}
+                className="text-zinc-400 hover:text-zinc-100 p-1"
+              >
+                <X className="w-6 h-6" />
               </button>
             </div>
 
             <div className="space-y-6 text-xs font-mono">
               
-              {/* Basic Fields */}
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-zinc-400">Título de la Lección</label>
+              {/* Basic Fields & Options */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                {/* Title */}
+                <div className="md:col-span-2 space-y-1">
+                  <label className="text-zinc-400 uppercase text-[11px] font-bold">Título de la Lección</label>
                   <input
                     type="text"
                     value={editingLesson.lesson.title}
@@ -789,12 +928,16 @@ export default function CourseBuilderPage() {
                         lesson: { ...editingLesson.lesson, title: e.target.value },
                       })
                     }
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 focus:outline-none focus:border-teal-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs font-bold focus:outline-none focus:border-teal-500"
                   />
                 </div>
 
+                {/* Video URL */}
                 <div className="space-y-1">
-                  <label className="text-zinc-400">Enlace a Vídeo de la Lección (YouTube / Vimeo / Direct URL)</label>
+                  <label className="text-zinc-400 uppercase text-[11px] font-bold flex items-center gap-1.5">
+                    <Video className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>URL del Vídeo (Vimeo, YouTube o MP4)</span>
+                  </label>
                   <input
                     type="text"
                     value={editingLesson.lesson.videoUrl || ""}
@@ -805,8 +948,117 @@ export default function CourseBuilderPage() {
                       })
                     }
                     placeholder="https://www.youtube.com/embed/..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 focus:outline-none focus:border-teal-500 font-mono text-[11px]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-teal-500 font-mono"
                   />
+                </div>
+
+                {/* Duration in Minutes */}
+                <div className="space-y-1">
+                  <label className="text-zinc-400 uppercase text-[11px] font-bold flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-teal-400" />
+                    <span>Duración Estimada (en Minutos)</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="600"
+                    value={Math.round((editingLesson.lesson.duration || 600) / 60)}
+                    onChange={(e) => {
+                      const mins = parseInt(e.target.value) || 1;
+                      setEditingLesson({
+                        ...editingLesson,
+                        lesson: { ...editingLesson.lesson, duration: mins * 60 },
+                      });
+                    }}
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-teal-500 font-bold"
+                  />
+                </div>
+
+              </div>
+
+              {/* Checkbox: Free Preview */}
+              <div className="p-4 bg-[#111319] rounded-xl border border-zinc-800 flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <span className="font-bold text-zinc-200 text-xs flex items-center gap-2">
+                    <Eye className="w-4 h-4 text-emerald-400" />
+                    <span>Lección Gratuita de Vista Previa (Public Preview)</span>
+                  </span>
+                  <p className="text-[11px] text-zinc-400">
+                    Permite que los usuarios no inscritos vean esta lección gratis como demostración del curso.
+                  </p>
+                </div>
+
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editingLesson.lesson.isFreePreview || false}
+                    onChange={(e) =>
+                      setEditingLesson({
+                        ...editingLesson,
+                        lesson: { ...editingLesson.lesson, isFreePreview: e.target.checked },
+                      })
+                    }
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-400 shadow-glow" />
+                </label>
+              </div>
+
+              {/* 🎙️ Rich Text Explication with Integrated Speech-to-Text Microphone */}
+              <div className="space-y-2 pt-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#111319] p-3 rounded-t-xl border border-zinc-800">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-teal-400" />
+                    <span className="font-bold text-zinc-100 text-xs uppercase tracking-wider">
+                      Explicación Teórica / Notas de la Lección
+                    </span>
+                  </div>
+
+                  {/* Speech-to-Text Microphone Button */}
+                  <button
+                    type="button"
+                    onClick={toggleSpeechRecognition}
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-2 shadow-md ${
+                      isListening
+                        ? "bg-red-500/20 text-red-300 border border-red-500/60 animate-pulse shadow-glow-red"
+                        : "bg-zinc-900 text-teal-300 border border-teal-500/40 hover:bg-zinc-800 hover:border-teal-400"
+                    }`}
+                  >
+                    {isListening ? (
+                      <>
+                        <MicOff className="w-4 h-4 text-red-400 animate-spin" />
+                        <span>🔴 Detener Dictado por Voz</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="w-4 h-4 text-teal-400" />
+                        <span>🎙️ Dictar Explicación (Voz a Texto es-ES)</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <textarea
+                  rows={6}
+                  value={editingLesson.lesson.content || ""}
+                  onChange={(e) =>
+                    setEditingLesson({
+                      ...editingLesson,
+                      lesson: { ...editingLesson.lesson, content: e.target.value },
+                    })
+                  }
+                  placeholder="Escribe la teoría de la lección o haz clic en '🎙️ Dictar Explicación' para transcribir tu voz en tiempo real..."
+                  className="w-full p-4 rounded-b-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-teal-500 font-sans leading-relaxed"
+                />
+
+                <div className="flex items-center justify-between text-[11px] text-zinc-500 px-1 font-mono">
+                  <span>Caracteres: {(editingLesson.lesson.content || "").length}</span>
+                  {isListening && (
+                    <span className="text-red-400 animate-pulse font-bold flex items-center gap-1">
+                      <Volume2 className="w-3.5 h-3.5" />
+                      <span>Transcribiendo voz en vivo a español...</span>
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -815,9 +1067,9 @@ export default function CourseBuilderPage() {
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
                     <Paperclip className="w-4 h-4 text-purple-400" />
-                    <span>Archivos Descargables Adjuntos</span>
+                    <span>Gestor de Archivos Descargables Adjuntos</span>
                   </label>
-                  <span className="text-[10px] text-zinc-500">Stems WAV, MIDI, Presets FXP, Guías PDF</span>
+                  <span className="text-[10px] text-zinc-500">Stems WAV, Multitracks, MIDIs, Presets FXP, PDFs</span>
                 </div>
 
                 {/* Existing Attachments List */}
@@ -825,10 +1077,10 @@ export default function CourseBuilderPage() {
                   {editingLesson.lesson.attachments.map((att) => (
                     <div
                       key={att.id}
-                      className="flex items-center justify-between bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs"
+                      className="flex items-center justify-between bg-[#111319] p-3 rounded-xl border border-zinc-800 text-xs"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                        <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-purple-500/10 text-purple-400 border border-purple-500/30">
                           {att.fileType}
                         </span>
                         <span className="text-zinc-200 font-semibold">{att.title}</span>
@@ -844,20 +1096,20 @@ export default function CourseBuilderPage() {
                   ))}
 
                   {editingLesson.lesson.attachments.length === 0 && (
-                    <div className="p-4 rounded-xl bg-zinc-950/60 border border-dashed border-zinc-800 text-center text-zinc-500 text-xs">
-                      No hay archivos adjuntos en esta lección todavía.
+                    <div className="p-4 rounded-xl bg-[#111319]/60 border border-dashed border-zinc-800 text-center text-zinc-500 text-xs">
+                      No hay archivos descargables adjuntos en esta lección todavía.
                     </div>
                   )}
                 </div>
 
                 {/* Form to Add New Attachment */}
-                <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-3 mt-3">
-                  <div className="text-[11px] font-bold text-teal-400 uppercase">Añadir Nuevo Recurso Descargable</div>
+                <div className="p-4 bg-[#111319] rounded-xl border border-zinc-800 space-y-3 mt-3">
+                  <div className="text-[11px] font-bold text-teal-400 uppercase">Enlazar / Subir Nuevo Recurso Descargable</div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <input
                       type="text"
-                      placeholder="Nombre del Recurso (ej. Stems_Multitrack_WAV.zip)"
+                      placeholder="Nombre (ej. Stems_Multitrack_WAV_Mezcla.zip)"
                       value={newAttTitle}
                       onChange={(e) => setNewAttTitle(e.target.value)}
                       className="sm:col-span-2 px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs"
@@ -870,8 +1122,8 @@ export default function CourseBuilderPage() {
                     >
                       <option value="ZIP">ZIP / WAV Stems</option>
                       <option value="MIDI">Archivos MIDI</option>
-                      <option value="PRESET">Presets Synth</option>
-                      <option value="PDF">Guía PDF</option>
+                      <option value="PRESET">Presets FXP / Serum</option>
+                      <option value="PDF">Guía / Apuntes PDF</option>
                     </select>
                   </div>
 
@@ -891,7 +1143,11 @@ export default function CourseBuilderPage() {
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
                 <button
                   type="button"
-                  onClick={() => setEditingLesson(null)}
+                  onClick={() => {
+                    if (isListening && recognitionRef.current) recognitionRef.current.stop();
+                    setIsListening(false);
+                    setEditingLesson(null);
+                  }}
                   className="px-4 py-2 text-zinc-400 hover:text-zinc-100"
                 >
                   Cancelar
@@ -899,9 +1155,10 @@ export default function CourseBuilderPage() {
                 <button
                   type="button"
                   onClick={handleSaveLessonModal}
-                  className="px-5 py-2.5 bg-teal-400 text-zinc-950 font-extrabold rounded-xl shadow-glow"
+                  className="px-5 py-2.5 bg-teal-400 text-zinc-950 font-extrabold rounded-xl shadow-glow flex items-center gap-2"
                 >
-                  Guardar Lección
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Guardar Lección</span>
                 </button>
               </div>
 

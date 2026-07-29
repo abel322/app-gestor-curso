@@ -20,6 +20,7 @@ export interface LessonMock {
   content?: string;
   order: number;
   duration: number; // en segundos
+  isFreePreview?: boolean;
   moduleId: string;
   attachments: LessonAttachmentMock[];
 }
