@@ -120,27 +120,27 @@ export default function CourseBuilderPage() {
       };
 
       recognition.onresult = (event: any) => {
-        let currentTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcriptChunk = event.results[i][0].transcript;
-          currentTranscript += transcriptChunk;
+        let finalTranscript = "";
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
         }
 
-        if (editingLesson && currentTranscript) {
+        if (finalTranscript) {
           setEditingLesson((prev) => {
             if (!prev) return null;
-            const existingContent = prev.lesson.content || "";
-            const updatedContent = existingContent
-              ? existingContent.endsWith(" ")
-                ? existingContent + currentTranscript
-                : existingContent + " " + currentTranscript
-              : currentTranscript;
+            const cleanPrev = prev.lesson.content ? prev.lesson.content.trim() : "";
+            const newContent = cleanPrev
+              ? `${cleanPrev} ${finalTranscript.trim()}`
+              : finalTranscript.trim();
 
             return {
               ...prev,
               lesson: {
                 ...prev.lesson,
-                content: updatedContent,
+                content: newContent,
               },
             };
           });
@@ -326,7 +326,7 @@ export default function CourseBuilderPage() {
       isFreePreview: false,
       moduleId: modId,
       videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      content: "Escribe o dicta por voz la explicación teórica de esta lección...",
+      content: "",
       attachments: [],
     };
 
@@ -1033,7 +1033,7 @@ export default function CourseBuilderPage() {
                       lesson: { ...editingLesson.lesson, content: e.target.value },
                     })
                   }
-                  placeholder="Escribe la teoría de la lección o presiona '🎙️ Dictar Explicación' para transcribir tus explicaciones de audio automáticamente..."
+                  placeholder="Escribe o dicta por voz la explicación teórica de esta lección..."
                   className="w-full p-4 rounded-b-xl bg-[#111319] border border-zinc-800 text-zinc-100 text-xs focus:outline-none focus:border-teal-500 font-sans leading-relaxed"
                 />
 
