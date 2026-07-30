@@ -110,9 +110,9 @@ export default function CourseBuilderPage() {
 
     try {
       const recognition = new SpeechRecognition();
-      recognition.lang = "es-ES";
       recognition.continuous = true;
-      recognition.interimResults = true;
+      recognition.interimResults = false;
+      recognition.lang = "es-ES";
 
       recognition.onstart = () => {
         setIsListening(true);
@@ -120,22 +120,18 @@ export default function CourseBuilderPage() {
       };
 
       recognition.onresult = (event: any) => {
-        let finalTranscript = "";
-
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
+        let newText = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
           if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
+            newText += event.results[i][0].transcript;
           }
         }
 
-        if (finalTranscript) {
+        if (newText.trim()) {
           setEditingLesson((prev) => {
             if (!prev) return null;
-            const cleanPrev = prev.lesson.content ? prev.lesson.content.trim() : "";
-            const newContent = cleanPrev
-              ? `${cleanPrev} ${finalTranscript.trim()}`
-              : finalTranscript.trim();
-
+            const trimmedPrev = prev.lesson.content ? prev.lesson.content.trim() : "";
+            const newContent = trimmedPrev ? `${trimmedPrev} ${newText.trim()}` : newText.trim();
             return {
               ...prev,
               lesson: {
