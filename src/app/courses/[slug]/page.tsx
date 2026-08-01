@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { INITIAL_COURSES } from "@/lib/mock-data";
+import { notFound } from "next/navigation";
+import { db } from "@/lib/prisma";
 import { 
   BookOpen, 
   Clock, 
@@ -13,14 +11,42 @@ import {
   Award
 } from "lucide-react";
 
-export default function CourseDetailPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+export const dynamic = "force-dynamic";
 
-  const course = INITIAL_COURSES.find((c) => c.slug === slug) || INITIAL_COURSES[0];
+interface CourseDetailPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function CourseDetailPage({ params }: CourseDetailPageProps) {
+  const course = await db.course.findUnique({
+    where: { slug: params.slug },
+    include: {
+      modules: {
+        include: {
+          lessons: {
+            include: {
+              attachments: true,
+            },
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+
+  if (!course) {
+    notFound();
+  }
 
   const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-  const firstLessonId = course.modules[0]?.lessons[0]?.id || "les-1001";
+  const firstLessonId = course.modules[0]?.lessons[0]?.id || "";
 
   return (
     <div className="space-y-8">
@@ -38,7 +64,7 @@ export default function CourseDetailPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono">
             <Award className="w-3.5 h-3.5" />
-            <span>PLAN DE ESTUDIOS COMPLETO ACCREDITADO</span>
+            <span>PLAN DE ESTUDIOS COMPLETO ACREDITADO</span>
           </div>
 
           <h1 className="text-2xl md:text-4xl font-extrabold text-zinc-100 tracking-tight leading-tight">
@@ -67,13 +93,19 @@ export default function CourseDetailPage() {
             ${course.price}
           </div>
 
-          <Link
-            href={`/courses/${course.slug}/lessons/${firstLessonId}`}
-            className="w-full py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold hover:bg-teal-300 transition-transform active:scale-95 flex items-center justify-center gap-2 text-sm shadow-glow"
-          >
-            <PlayCircle className="w-5 h-5 fill-current" />
-            <span>Entrar al Reproductor de Lecciones</span>
-          </Link>
+          {firstLessonId ? (
+            <Link
+              href={`/courses/${course.slug}/lessons/${firstLessonId}`}
+              className="w-full py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold hover:bg-teal-300 transition-transform active:scale-95 flex items-center justify-center gap-2 text-sm shadow-glow"
+            >
+              <PlayCircle className="w-5 h-5 fill-current" />
+              <span>Entrar al Reproductor de Lecciones</span>
+            </Link>
+          ) : (
+            <div className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-sm cursor-not-allowed">
+              Próximamente disponible
+            </div>
+          )}
 
           <p className="text-[11px] text-zinc-500 font-mono">
             Incluye acceso de por vida y futuras actualizaciones de módulos.

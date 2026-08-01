@@ -42,14 +42,15 @@ model Module {
 }
 
 model Lesson {
-  id          String             @id @default(uuid())
-  title       String
-  videoUrl    String?
-  content     String?
-  order       Int                @default(0)
-  duration    Int                @default(0) // duration in seconds
-  moduleId    String
-  module      Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  id            String             @id @default(uuid())
+  title         String
+  videoUrl      String?
+  content       String?
+  order         Int                @default(0)
+  duration      Int                @default(0) // duration in seconds
+  isFreePreview Boolean            @default(false)
+  moduleId      String
+  module        Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   attachments LessonAttachment[]
   progress    CourseProgress[]
 }
