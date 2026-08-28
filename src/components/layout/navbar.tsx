@@ -13,7 +13,8 @@ import {
   ShieldAlert, 
   UserCheck, 
   Menu, 
-  X 
+  X,
+  Package
 } from "lucide-react";
 
 export function Navbar() {
@@ -22,7 +23,8 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: "📚 Creador & Editor", href: "/admin/courses/builder", icon: Wrench, roleRequired: "ADMIN" },
+    { label: "📦 Gestor Catálogo", href: "/admin/products", icon: Package, roleRequired: "ADMIN" },
+    { label: "📚 Course Builder", href: "/admin/courses/builder", icon: Wrench, roleRequired: "ADMIN" },
     { label: "📊 Métricas Estudiantes", href: "/admin/students", icon: BookOpen, roleRequired: "ADMIN" },
     { label: "📈 Dashboard KPI", href: "/admin/dashboard", icon: LayoutDashboard, roleRequired: "ADMIN" },
     { label: "🎵 Tienda & Assets", href: "/store", icon: ShoppingBag },
@@ -35,7 +37,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           
           {/* Logo */}
-          <Link href="/admin/courses/builder" className="flex items-center gap-2.5 group">
+          <Link href="/admin/products" className="flex items-center gap-2.5 group">
             <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-teal-500/50 flex items-center justify-center shadow-glow group-hover:border-teal-400 transition-colors">
               <Sparkles className="w-5 h-5 text-teal-400 group-hover:scale-110 transition-transform" />
             </div>
@@ -45,11 +47,11 @@ export function Navbar() {
                   SYNTHESIS<span className="text-teal-400">.STUDIO</span>
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-teal-500/10 text-teal-300 border border-teal-500/30">
-                  LMS ADMIN
+                  LMS & MARKETPLACE ADMIN
                 </span>
               </div>
               <span className="block text-[10px] text-zinc-400 uppercase tracking-widest -mt-0.5 font-sans">
-                Panel de Administración y Creación de Cursos
+                Gestión Central de Catálogo, Cursos y Beats
               </span>
             </div>
           </Link>

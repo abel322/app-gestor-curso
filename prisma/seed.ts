@@ -1,44 +1,50 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ProductType, ProductStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Poblando la base de datos con datos de prueba...");
+  console.log("Poblando la base de datos PostgreSQL con datos de catálogo unificado...");
 
-  // Limpieza previa
+  // Limpieza previa respetando orden de dependencias
   await prisma.purchase.deleteMany();
   await prisma.courseProgress.deleteMany();
   await prisma.lessonAttachment.deleteMany();
   await prisma.lesson.deleteMany();
-  await prisma.module.deleteMany();
-  await prisma.course.deleteMany();
-  await prisma.musicProduct.deleteMany();
+  await prisma.courseModule.deleteMany();
+  await prisma.product.deleteMany();
   await prisma.user.deleteMany();
 
-  // Crear Usuarios
-  await prisma.user.create({
-    data: { name: "Alex Productor", email: "alex@productor.com", role: "ADMIN" },
+  // 1. Crear Usuarios
+  const adminUser = await prisma.user.create({
+    data: { id: "usr-1", name: "Alex Productor", email: "alex@productor.com", role: "ADMIN" },
+  });
+
+  const studentUser = await prisma.user.create({
+    data: { id: "usr-2", name: "Elena Rostova", email: "elena@beats.io", role: "STUDENT" },
   });
 
   await prisma.user.create({
-    data: { name: "Elena Rostova", email: "elena@beats.io", role: "STUDENT" },
+    data: { id: "usr-3", name: "Marcos Vance", email: "marcos@diseñodesonido.com", role: "STUDENT" },
   });
 
-  await prisma.user.create({
-    data: { name: "Marcos Vance", email: "marcos@diseñodesonido.com", role: "STUDENT" },
-  });
-
-  // 1. Curso Profesional de Mezcla de Sonido
-  await prisma.course.create({
+  // 2. PRODUCTO: CURSO ONLINE 1
+  const course1 = await prisma.product.create({
     data: {
-      id: "crs-mezcla",
+      id: "prod-course-mezcla",
       title: "Curso Profesional de Mezcla de Sonido",
       slug: "curso-profesional-mezcla-sonido",
       description: "Aprende ecualización quirúrgica, procesamiento dinámico, emulaciones analógicas y técnicas avanzadas de balance espacial para llevar tus canciones a nivel comercial.",
-      image: "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?q=80&w=800&auto=format&fit=crop",
       price: 119.99,
-      published: false,
-      status: "DRAFT",
+      salePrice: 89.99,
+      type: ProductType.COURSE,
+      category: "Mezcla & Mastering",
+      status: ProductStatus.PUBLISHED,
+      isFeatured: true,
+      thumbnailUrl: "https://images.unsplash.com/photo-1598653222000-6b7b7a552625?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=mixing-demo.mp3",
+      downloadFileUrl: "https://storage.synthesis.studio/courses/stems-mezcla.zip",
+      fileSize: "2.4 GB",
+      formatInfo: "24 Lecciones HD + Stems Multitrack",
       modules: {
         create: [
           {
@@ -57,10 +63,8 @@ async function main() {
                   content: "Cómo identificar frecuencias resonantes en bombo, bajo y sintetizadores usando ecualizadores paramétricos de alta precisión.",
                   attachments: {
                     create: [
-                      { id: "att-m1", title: "Stems_Multitrack_WAV_Sesion.zip", fileUrl: "#", fileType: "ZIP" },
-                      { id: "att-m2", title: "Preset_FabFilter_ProQ3_Limpieza.fxp", fileUrl: "#", fileType: "PRESET" },
-                      { id: "att-m3", title: "Guia_Ecualizacion_Pro.pdf", fileUrl: "#", fileType: "PDF" },
-                      { id: "att-m4", title: "Groove_Bajo_Midi.mid", fileUrl: "#", fileType: "MIDI" },
+                      { id: "att-m1", title: "Stems_Multitrack_WAV_Sesion.zip", fileUrl: "https://storage.synthesis.studio/att/stems.zip", fileType: "ZIP" },
+                      { id: "att-m2", title: "Preset_FabFilter_ProQ3_Limpieza.fxp", fileUrl: "https://storage.synthesis.studio/att/preset.fxp", fileType: "PRESET" },
                     ],
                   },
                 },
@@ -72,11 +76,6 @@ async function main() {
                   isFreePreview: false,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
                   content: "Técnicas de alineación de fase y calibración VU meter para que el subgrave nunca enmascare la mezcla.",
-                  attachments: {
-                    create: [
-                      { id: "att-m5", title: "Guia_Calibracion_VU.pdf", fileUrl: "#", fileType: "PDF" },
-                    ],
-                  },
                 },
               ],
             },
@@ -95,20 +94,6 @@ async function main() {
                   isFreePreview: false,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
                   content: "Cuándo usar un 1176, LA-2A o SSL Bus Compressor para moldear el ataque y sostenido de baterías y voces.",
-                  attachments: {
-                    create: [
-                      { id: "att-m6", title: "Tabla_Tiempos_Ataque_Release.pdf", fileUrl: "#", fileType: "PDF" },
-                    ],
-                  },
-                },
-                {
-                  id: "les-m202",
-                  title: "Lección 2.2: Sidechain Dinámico y Control de Transitorios",
-                  order: 2,
-                  duration: 750,
-                  isFreePreview: false,
-                  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Creación de bombeo sutil y descompresión de frecuencias medias para mantener claridad vocal.",
                 },
               ],
             },
@@ -118,76 +103,40 @@ async function main() {
     },
   });
 
-  // 2. Masterclass de Diseño de Sonido en Serum
-  await prisma.course.create({
+  // 3. PRODUCTO: CURSO ONLINE 2
+  await prisma.product.create({
     data: {
-      id: "crs-1",
-      title: "Masterclass de Diseño de Sonido en Serum: Cyberpunk y Trap Moderno",
+      id: "prod-course-serum",
+      title: "Masterclass de Diseño de Sonido en Serum: Cyberpunk y Trap",
       slug: "masterclass-diseno-sonido-serum",
       description: "Domina la síntesis por tablas de ondas, ruteo avanzado de LFOs y diseño de bajos neón en Xfer Serum. Incluye más de 50 presets y stems de proyecto.",
-      image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800&auto=format&fit=crop",
       price: 99.99,
-      published: true,
-      status: "PUBLISHED",
+      salePrice: 69.99,
+      type: ProductType.COURSE,
+      category: "Síntesis",
+      status: ProductStatus.PUBLISHED,
+      isFeatured: false,
+      thumbnailUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a739f3.mp3?filename=serum-demo.mp3",
+      downloadFileUrl: "https://storage.synthesis.studio/courses/serum-presets.zip",
+      fileSize: "850 MB",
+      formatInfo: "18 Video Lecciones + 50 Presets",
       modules: {
         create: [
           {
-            id: "mod-101",
-            title: "Módulo 1: Síntesis de Tablas de Ondas y Osciladores Personalizados",
+            id: "mod-serum-1",
+            title: "Módulo 1: Osciladores y Modulación FM",
             order: 1,
             lessons: {
               create: [
                 {
-                  id: "les-1001",
+                  id: "les-serum-101",
                   title: "1.1 Importación de Tablas de Ondas y Transiciones Suaves",
                   order: 1,
                   duration: 740,
-                  isFreePreview: false,
+                  isFreePreview: true,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Aprende a importar formas de onda de audio puro en Xfer Serum y utilizar el editor 3D para suavizar los fotogramas de transición.",
-                  attachments: {
-                    create: [
-                      { id: "att-1", title: "Pack_Tablas_Ondas_Cyberpunk.zip", fileUrl: "#", fileType: "ZIP" },
-                      { id: "att-2", title: "Guia_Leccion_1.pdf", fileUrl: "#", fileType: "PDF" },
-                    ],
-                  },
-                },
-                {
-                  id: "les-1002",
-                  title: "1.2 Diseño de Bajos Reese Pesados y Modulación FM",
-                  order: 2,
-                  duration: 1120,
-                  isFreePreview: false,
-                  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Paso a paso para modulación FM desde Osc B hacia Osc A, ruteo de filtros divididos y saturación sub-armónica.",
-                  attachments: {
-                    create: [
-                      { id: "att-3", title: "Bajo_Reese_Preset_Serum.fxp", fileUrl: "#", fileType: "PRESET" },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            id: "mod-102",
-            title: "Módulo 2: Secuencias Avanzadas de LFO y Movimiento de Filtros",
-            order: 2,
-            lessons: {
-              create: [
-                {
-                  id: "les-1003",
-                  title: "2.1 Creación de Acordes Vocales Rítmicos con Gate",
-                  order: 1,
-                  duration: 910,
-                  isFreePreview: false,
-                  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Uso del ajuste a la rejilla para diseñar patrones de LFO complejos para compresión sidechain sin plugins de terceros.",
-                  attachments: {
-                    create: [
-                      { id: "att-4", title: "Progresion_Acordes.mid", fileUrl: "#", fileType: "MIDI" },
-                    ],
-                  },
+                  content: "Aprende a importar formas de onda de audio puro en Xfer Serum y utilizar el editor 3D.",
                 },
               ],
             },
@@ -197,79 +146,147 @@ async function main() {
     },
   });
 
-  // 3. Producción Profesional de Afrobeat y Amapiano
-  await prisma.course.create({
+  // 4. PRODUCTO: SAMPLE PACK
+  const samplePack = await prisma.product.create({
     data: {
-      id: "crs-2",
-      title: "Producción Profesional de Afrobeat y Amapiano",
-      slug: "produccion-pro-afrobeat-amapiano",
-      description: "Aprende mezcla de Log Drums, cuantización de groove, marimbas melódicas y capas de percusión contagiosas de la mano de productores reconocidos.",
-      image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop",
-      price: 129.99,
-      published: true,
-      status: "PUBLISHED",
-      modules: {
-        create: [
-          {
-            id: "mod-201",
-            title: "Módulo 1: Ritmo, Percusión y Ciencia del Log Drum",
-            order: 1,
-            lessons: {
-              create: [
-                {
-                  id: "les-2001",
-                  title: "1.1 Creación del Bajo Log Drum Característico del Amapiano",
-                  order: 1,
-                  duration: 850,
-                  isFreePreview: false,
-                  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Técnicas de deslizamiento de tono (pitch glide), modelado de envolventes y limpieza de frecuencias graves en mono para grandes sistemas de sonido.",
-                  attachments: {
-                    create: [
-                      { id: "att-5", title: "Kit_Log_Drums_Amapiano.zip", fileUrl: "#", fileType: "ZIP" },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+      id: "prod-sample-cyberpunk",
+      title: "CYBERPUNK 2099 - Drum Kit & Wav Samples",
+      slug: "cyberpunk-2099-drum-kit-wav-samples",
+      description: "Colección masiva de Kicks Cyber, Snares industriales, Hi-Hats procesados con hardware analógico y FX futuristas sin derechos de autor.",
+      price: 34.99,
+      salePrice: 24.99,
+      type: ProductType.SAMPLE_PACK,
+      category: "Cyberpunk / Synthwave",
+      status: ProductStatus.PUBLISHED,
+      isFeatured: true,
+      thumbnailUrl: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=cyberpunk-drums-demo.mp3",
+      downloadFileUrl: "https://storage.synthesis.studio/packs/cyberpunk-2099-samples.zip",
+      fileSize: "1.2 GB",
+      bpm: 120,
+      key: "F# Minor",
+      formatInfo: "350 WAV Samples (24-bit / 44.1kHz) + 30 MIDIs",
     },
   });
 
-  // Crear Productos Musicales
-  await prisma.musicProduct.createMany({
-    data: [
-      {
-        title: "CYBERPUNK 2099 - Pack de Beats y Stems",
-        slug: "cyberpunk-2099-beats-stems",
-        description: "Stems de producción para synthwave, midtempo oscuro e industrial futurista.",
-        price: 34.99,
-        bpm: 120,
-        key: "Fa# Menor",
-        audioDemoUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=cyberpunk-beat-120bpm.mp3",
-        downloadZipUrl: "#",
-        productType: "BEAT",
-      },
-      {
-        title: "NEON SYNTHWAVE V1 - Presets para Serum",
-        slug: "neon-synthwave-v1-serum",
-        description: "64 Pads analógicos, arpegios retro, metales synth y plucks de los 80.",
-        price: 24.99,
-        audioDemoUrl: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a739f3.mp3?filename=synthwave-preview.mp3",
-        downloadZipUrl: "#",
-        productType: "PRESET",
-      },
-    ],
+  // 5. PRODUCTO: LOOP
+  await prisma.product.create({
+    data: {
+      id: "prod-loop-afrobeat",
+      title: "AFROBEAT & AMAPIANO GUITAR LOOPS 2026",
+      slug: "afrobeat-amapiano-guitar-loops-2026",
+      description: "Loops de guitarra limpia y procesada grabado por músicos de sesión profesional. Cuantizados en 115 BPM a 125 BPM con claves especificadas.",
+      price: 29.99,
+      salePrice: 19.99,
+      type: ProductType.LOOP,
+      category: "Afrobeat / Amapiano",
+      status: ProductStatus.PUBLISHED,
+      isFeatured: true,
+      thumbnailUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=afrobeat-loop-demo.mp3",
+      downloadFileUrl: "https://storage.synthesis.studio/loops/afrobeat-guitar-loops.zip",
+      fileSize: "680 MB",
+      bpm: 118,
+      key: "C Major",
+      formatInfo: "60 Guitarras WAV Loops Stem-by-Stem",
+    },
   });
 
-  console.log("¡Base de datos poblada exitosamente!");
+  // 6. PRODUCTO: TRACK / BEAT
+  const trackBeat = await prisma.product.create({
+    data: {
+      id: "prod-track-darkbeat",
+      title: "MIDNIGHT RHAPSODY - Master Beat Track (WAV + Stems)",
+      slug: "midnight-rhapsody-master-beat-track",
+      description: "Pista / Beat completo de Trap Latino y R&B con estructura terminada, mezcla profesional y stems individuales listos para voz.",
+      price: 49.99,
+      salePrice: null,
+      type: ProductType.TRACK,
+      category: "Trap / R&B",
+      status: ProductStatus.PUBLISHED,
+      isFeatured: false,
+      thumbnailUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_c2741d408f.mp3?filename=midnight-beat-preview.mp3",
+      downloadFileUrl: "https://storage.synthesis.studio/tracks/midnight-rhapsody-stems.zip",
+      fileSize: "450 MB",
+      bpm: 140,
+      key: "A Minor",
+      formatInfo: "Master WAV 24-Bit + Stems Separados",
+    },
+  });
+
+  // 7. PRODUCTO: BUNDLE
+  await prisma.product.create({
+    data: {
+      id: "prod-bundle-producer-vault",
+      title: "PRODUCER VAULT 2026 - Ultimate Everything Bundle",
+      slug: "producer-vault-2026-ultimate-everything-bundle",
+      description: "Todo el catálogo de loops, sample packs, presets de Serum y plantillas en un solo paquete definitivo con descuento del 60%.",
+      price: 199.99,
+      salePrice: 99.99,
+      type: ProductType.BUNDLE,
+      category: "Bundle Multigénero",
+      status: ProductStatus.PUBLISHED,
+      isFeatured: true,
+      thumbnailUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=bundle-demo.mp3",
+      downloadFileUrl: "https://storage.synthesis.studio/bundles/producer-vault-2026.zip",
+      fileSize: "5.5 GB",
+      bpm: 130,
+      key: "Varios Keys",
+      formatInfo: "5 Pack de Samples + 120 Loops + 100 Presets",
+    },
+  });
+
+  // 8. PRODUCTO BORRADOR (DRAFT)
+  await prisma.product.create({
+    data: {
+      id: "prod-draft-lofi",
+      title: "LO-FI CHILL ROOM VOL. 2 (Próximo Lanzamiento)",
+      slug: "lo-fi-chill-room-vol-2",
+      description: "Bienes en borrador para pruebas de administración y publicación.",
+      price: 19.99,
+      type: ProductType.SAMPLE_PACK,
+      category: "Lo-Fi",
+      status: ProductStatus.DRAFT,
+      isFeatured: false,
+      thumbnailUrl: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop",
+      previewAudioUrl: null,
+      downloadFileUrl: null,
+      fileSize: "320 MB",
+      bpm: 85,
+      key: "E Minor",
+      formatInfo: "40 Vinyl Drums + 15 Piano Loops",
+    },
+  });
+
+  // 9. Compras de Prueba
+  await prisma.purchase.create({
+    data: {
+      userId: studentUser.id,
+      productId: course1.id,
+      productType: ProductType.COURSE,
+      amount: 89.99,
+      status: "COMPLETED",
+    },
+  });
+
+  await prisma.purchase.create({
+    data: {
+      userId: studentUser.id,
+      productId: samplePack.id,
+      productType: ProductType.SAMPLE_PACK,
+      amount: 24.99,
+      status: "COMPLETED",
+    },
+  });
+
+  console.log("¡Base de datos sembrada con éxito con catálogo multiproducto!");
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error("Error al sembrar la base de datos:", e);
     process.exit(1);
   })
   .finally(async () => {

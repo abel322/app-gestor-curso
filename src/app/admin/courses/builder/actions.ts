@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { ProductType, ProductStatus } from "@prisma/client";
 
 export async function createCourseAction(data: {
   title: string;
@@ -9,38 +10,44 @@ export async function createCourseAction(data: {
   price: number;
   image: string;
 }) {
-  const slug = data.title
+  const baseSlug = data.title
     .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 
-  const course = await db.course.create({
+  const slug = `${baseSlug}-${Math.random().toString(36).substring(2, 7)}`;
+
+  const course = await db.product.create({
     data: {
       title: data.title,
       slug,
       description: data.description,
-      price: data.price,
-      image: data.image,
-      published: false,
-      status: "DRAFT",
+      price: Number(data.price),
+      thumbnailUrl: data.image,
+      type: ProductType.COURSE,
+      category: "Educación & Cursos",
+      status: ProductStatus.DRAFT,
     },
   });
 
+  revalidatePath("/admin/products");
   revalidatePath("/admin/courses/builder");
   revalidatePath("/courses");
   return course;
 }
 
 export async function togglePublishCourseAction(courseId: string, published: boolean) {
-  const status = published ? "PUBLISHED" : "DRAFT";
-  const course = await db.course.update({
+  const status = published ? ProductStatus.PUBLISHED : ProductStatus.DRAFT;
+  const course = await db.product.update({
     where: { id: courseId },
     data: {
-      published,
       status,
     },
   });
 
+  revalidatePath("/admin/products");
   revalidatePath("/admin/courses/builder");
   revalidatePath("/courses");
   revalidatePath(`/courses/${course.slug}`);
@@ -48,43 +55,46 @@ export async function togglePublishCourseAction(courseId: string, published: boo
 }
 
 export async function createModuleAction(courseId: string, title: string, order: number) {
-  const module = await db.module.create({
+  const module = await db.courseModule.create({
     data: {
-      courseId,
+      productId: courseId,
       title,
       order,
     },
   });
 
-  const course = await db.course.findUnique({ where: { id: courseId }, select: { slug: true } });
+  const course = await db.product.findUnique({ where: { id: courseId }, select: { slug: true } });
   revalidatePath("/admin/courses/builder");
+  revalidatePath("/admin/products");
   if (course) revalidatePath(`/courses/${course.slug}`);
   return module;
 }
 
 export async function deleteModuleAction(moduleId: string) {
-  const module = await db.module.delete({
+  const module = await db.courseModule.delete({
     where: { id: moduleId },
-    include: { course: true }
+    include: { product: true }
   });
 
   revalidatePath("/admin/courses/builder");
-  if (module.course) revalidatePath(`/courses/${module.course.slug}`);
+  revalidatePath("/admin/products");
+  if (module.product) revalidatePath(`/courses/${module.product.slug}`);
   return module;
 }
 
 export async function updateModuleOrderAction(modules: { id: string; order: number }[]) {
   const updates = modules.map((m) =>
-    db.module.update({
+    db.courseModule.update({
       where: { id: m.id },
       data: { order: m.order },
-      include: { course: true }
+      include: { product: true }
     })
   );
   const results = await Promise.all(updates);
 
   revalidatePath("/admin/courses/builder");
-  if (results[0]?.course) revalidatePath(`/courses/${results[0].course.slug}`);
+  revalidatePath("/admin/products");
+  if (results[0]?.product) revalidatePath(`/courses/${results[0].product.slug}`);
   return results;
 }
 
@@ -99,13 +109,13 @@ export async function createLessonAction(moduleId: string, title: string, order:
     },
     include: {
       module: {
-        include: { course: true }
+        include: { product: true }
       }
     }
   });
 
   revalidatePath("/admin/courses/builder");
-  if (lesson.module?.course) revalidatePath(`/courses/${lesson.module.course.slug}`);
+  if (lesson.module?.product) revalidatePath(`/courses/${lesson.module.product.slug}`);
   return lesson;
 }
 
@@ -114,13 +124,13 @@ export async function deleteLessonAction(lessonId: string) {
     where: { id: lessonId },
     include: {
       module: {
-        include: { course: true }
+        include: { product: true }
       }
     }
   });
 
   revalidatePath("/admin/courses/builder");
-  if (lesson.module?.course) revalidatePath(`/courses/${lesson.module.course.slug}`);
+  if (lesson.module?.product) revalidatePath(`/courses/${lesson.module.product.slug}`);
   return lesson;
 }
 
@@ -131,7 +141,7 @@ export async function updateLessonOrderAction(lessons: { id: string; order: numb
       data: { order: l.order },
       include: {
         module: {
-          include: { course: true }
+          include: { product: true }
         }
       }
     })
@@ -139,7 +149,7 @@ export async function updateLessonOrderAction(lessons: { id: string; order: numb
   const results = await Promise.all(updates);
 
   revalidatePath("/admin/courses/builder");
-  const courseSlug = results[0]?.module?.course?.slug;
+  const courseSlug = results[0]?.module?.product?.slug;
   if (courseSlug) revalidatePath(`/courses/${courseSlug}`);
   return results;
 }
@@ -165,15 +175,15 @@ export async function updateLessonAction(
     },
     include: {
       module: {
-        include: { course: true }
+        include: { product: true }
       }
     }
   });
 
   revalidatePath("/admin/courses/builder");
-  if (lesson.module?.course) {
-    revalidatePath(`/courses/${lesson.module.course.slug}`);
-    revalidatePath(`/courses/${lesson.module.course.slug}/lessons/${lessonId}`);
+  if (lesson.module?.product) {
+    revalidatePath(`/courses/${lesson.module.product.slug}`);
+    revalidatePath(`/courses/${lesson.module.product.slug}/lessons/${lessonId}`);
   }
   return lesson;
 }
@@ -197,7 +207,7 @@ export async function addLessonAttachmentAction(
       lesson: {
         include: {
           module: {
-            include: { course: true }
+            include: { product: true }
           }
         }
       }
@@ -205,9 +215,9 @@ export async function addLessonAttachmentAction(
   });
 
   revalidatePath("/admin/courses/builder");
-  if (attachment.lesson?.module?.course) {
-    revalidatePath(`/courses/${attachment.lesson.module.course.slug}`);
-    revalidatePath(`/courses/${attachment.lesson.module.course.slug}/lessons/${lessonId}`);
+  if (attachment.lesson?.module?.product) {
+    revalidatePath(`/courses/${attachment.lesson.module.product.slug}`);
+    revalidatePath(`/courses/${attachment.lesson.module.product.slug}/lessons/${lessonId}`);
   }
   return attachment;
 }
@@ -219,7 +229,7 @@ export async function deleteLessonAttachmentAction(attachmentId: string) {
       lesson: {
         include: {
           module: {
-            include: { course: true }
+            include: { product: true }
           }
         }
       }
@@ -227,9 +237,9 @@ export async function deleteLessonAttachmentAction(attachmentId: string) {
   });
 
   revalidatePath("/admin/courses/builder");
-  if (attachment.lesson?.module?.course) {
-    revalidatePath(`/courses/${attachment.lesson.module.course.slug}`);
-    revalidatePath(`/courses/${attachment.lesson.module.course.slug}/lessons/${attachment.lessonId}`);
+  if (attachment.lesson?.module?.product) {
+    revalidatePath(`/courses/${attachment.lesson.module.product.slug}`);
+    revalidatePath(`/courses/${attachment.lesson.module.product.slug}/lessons/${attachment.lessonId}`);
   }
   return attachment;
 }

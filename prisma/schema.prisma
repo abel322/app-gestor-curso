@@ -9,6 +9,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ProductType {
+  COURSE
+  SAMPLE_PACK
+  LOOP
+  TRACK
+  BUNDLE
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id        String           @id @default(uuid())
   email     String           @unique
@@ -19,44 +33,64 @@ model User {
   purchases Purchase[]
 }
 
-model Course {
-  id          String   @id @default(uuid())
-  title       String
-  slug        String   @unique
-  description String
-  image       String
-  price       Float
-  published   Boolean  @default(false)
-  status      String   @default("DRAFT") // DRAFT, PUBLISHED, DRIP_SCHEDULED
-  createdAt   DateTime @default(now())
-  modules     Module[]
+model Product {
+  id              String         @id @default(cuid())
+  title           String
+  slug            String         @unique
+  description     String
+  price           Float
+  salePrice       Float?
+  type            ProductType
+  category        String         // ej: "Trap", "Lo-Fi", "Mezcla", "Batería", "Piano"
+  status          ProductStatus  @default(DRAFT)
+  isFeatured      Boolean        @default(false)
+  
+  // Multimedia pública
+  thumbnailUrl    String         // Carátula (JPG/PNG)
+  previewAudioUrl String?        // Demo MP3 público (30-60 seg con reproductor)
+  
+  // Archivo protegido (solo accesible tras compra)
+  downloadFileUrl String?        // URL privada al archivo ZIP/WAV en S3/Cloudflare R2
+  fileSize        String?        // ej: "1.2 GB", "450 MB"
+  
+  // Metadatos específicos para Loops / Beats
+  bpm             Int?           // ej: 140
+  key             String?        // ej: "C Minor", "F# Major"
+  formatInfo      String?        // ej: "50 WAV Loops + 20 MIDIs"
+  
+  // Relación con Cursos (solo aplica si type == COURSE)
+  modules         CourseModule[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  purchases       Purchase[]
 }
 
-model Module {
-  id       String   @id @default(uuid())
-  title    String
-  order    Int      @default(0)
-  courseId String
-  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  lessons  Lesson[]
+model CourseModule {
+  id        String    @id @default(cuid())
+  title     String
+  order     Int
+  productId String
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
 }
 
 model Lesson {
-  id            String             @id @default(uuid())
+  id            String             @id @default(cuid())
   title         String
   videoUrl      String?
   content       String?
-  order         Int                @default(0)
-  duration      Int                @default(0) // duration in seconds
+  duration      Int?               @default(0) // Duración en segundos
   isFreePreview Boolean            @default(false)
+  order         Int
   moduleId      String
-  module        Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  attachments LessonAttachment[]
-  progress    CourseProgress[]
+  module        CourseModule       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  attachments   LessonAttachment[]
+  progress      CourseProgress[]
 }
 
 model LessonAttachment {
-  id       String @id @default(uuid())
+  id       String @id @default(cuid())
   title    String
   fileUrl  String
   fileType String // PDF, MIDI, PRESET, ZIP
@@ -76,27 +110,14 @@ model CourseProgress {
   @@unique([userId, lessonId])
 }
 
-model MusicProduct {
-  id            String   @id @default(uuid())
-  title         String
-  slug          String   @unique
-  description   String
-  price         Float
-  bpm           Int?
-  key           String?
-  audioDemoUrl  String
-  downloadZipUrl String
-  productType   String   // BEAT, SAMPLE_PACK, PRESET, MIDI
-  createdAt     DateTime @default(now())
-}
-
 model Purchase {
-  id          String   @id @default(uuid())
+  id          String       @id @default(uuid())
   userId      String
-  productType String   // COURSE, MUSIC_ASSET
-  referenceId String   // Course ID or MusicProduct ID
+  productId   String?
+  product     Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productType ProductType?
   amount      Float
-  status      String   @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      String       @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
+  createdAt   DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -349,7 +349,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
           id: newLes.id,
           title: newLes.title,
           order: newLes.order,
-          duration: newLes.duration,
+          duration: newLes.duration ?? 0,
           isFreePreview: newLes.isFreePreview,
           moduleId: modId,
           videoUrl: newLes.videoUrl || undefined,

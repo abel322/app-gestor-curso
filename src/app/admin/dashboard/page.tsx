@@ -1,10 +1,14 @@
 import { db } from "@/lib/prisma";
 import AdminDashboardClient from "./AdminDashboardClient";
+import { ProductType } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const courses = await db.course.findMany({
+  const courses = await db.product.findMany({
+    where: {
+      type: ProductType.COURSE,
+    },
     include: {
       modules: {
         include: {
@@ -24,15 +28,29 @@ export default async function Page() {
   const progress = await db.courseProgress.findMany();
 
   const serializedCourses = courses.map((course) => ({
-    ...course,
-    createdAt: course.createdAt.toISOString().split("T")[0],
+    id: course.id,
+    title: course.title,
+    slug: course.slug,
+    description: course.description,
+    image: course.thumbnailUrl,
+    price: course.price,
+    published: course.status === "PUBLISHED",
     status: course.status as 'DRAFT' | 'PUBLISHED' | 'DRIP_SCHEDULED',
+    createdAt: course.createdAt.toISOString().split("T")[0],
     modules: course.modules.map((mod) => ({
-      ...mod,
+      id: mod.id,
+      title: mod.title,
+      order: mod.order,
+      courseId: mod.productId,
       lessons: mod.lessons.map((les) => ({
-        ...les,
+        id: les.id,
+        title: les.title,
         videoUrl: les.videoUrl || undefined,
         content: les.content || undefined,
+        duration: les.duration || 0,
+        isFreePreview: les.isFreePreview,
+        order: les.order,
+        moduleId: les.moduleId,
         attachments: [],
       })),
     })),
@@ -40,7 +58,8 @@ export default async function Page() {
 
   const serializedPurchases = purchases.map((p) => ({
     ...p,
-    productType: p.productType as 'COURSE' | 'MUSIC_ASSET',
+    referenceId: p.productId || p.id,
+    productType: (p.productType || "COURSE") as 'COURSE' | 'MUSIC_ASSET',
     status: p.status as 'COMPLETED' | 'PENDING' | 'REFUNDED',
     createdAt: p.createdAt.toISOString().split("T")[0],
   }));

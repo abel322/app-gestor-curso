@@ -1,13 +1,16 @@
 import { db } from "@/lib/prisma";
-import StorefrontClient from "./StorefrontClient";
-import { ProductStatus } from "@prisma/client";
+import ProductCatalogClient from "./ProductCatalogClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function StorefrontPage() {
+export default async function AdminProductsPage() {
   const products = await db.product.findMany({
-    where: {
-      status: ProductStatus.PUBLISHED,
+    include: {
+      modules: {
+        include: {
+          lessons: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -20,5 +23,5 @@ export default async function StorefrontPage() {
     updatedAt: product.updatedAt.toISOString().split("T")[0],
   }));
 
-  return <StorefrontClient initialProducts={serializedProducts} />;
+  return <ProductCatalogClient initialProducts={serializedProducts} />;
 }

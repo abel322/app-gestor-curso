@@ -20,7 +20,7 @@ interface CourseDetailPageProps {
 }
 
 export default async function CourseDetailPage({ params }: CourseDetailPageProps) {
-  const course = await db.course.findUnique({
+  const course = await db.product.findUnique({
     where: { slug: params.slug },
     include: {
       modules: {
@@ -90,19 +90,19 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
         {/* Action Sidebar Box */}
         <div className="bg-zinc-950/80 p-6 rounded-xl border border-zinc-800/80 space-y-4 text-center">
           <div className="text-2xl font-extrabold text-teal-400 font-mono">
-            ${course.price}
+            ${course.salePrice || course.price}
           </div>
 
           {firstLessonId ? (
             <Link
               href={`/courses/${course.slug}/lessons/${firstLessonId}`}
-              className="w-full py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold hover:bg-teal-300 transition-transform active:scale-95 flex items-center justify-center gap-2 text-sm shadow-glow"
+              className="w-full py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold hover:bg-teal-300 transition-transform active:scale-95 flex items-center justify-center gap-2 text-sm shadow-glow font-mono"
             >
               <PlayCircle className="w-5 h-5 fill-current" />
               <span>Entrar al Reproductor de Lecciones</span>
             </Link>
           ) : (
-            <div className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-sm cursor-not-allowed">
+            <div className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-sm cursor-not-allowed font-mono">
               Próximamente disponible
             </div>
           )}
@@ -115,7 +115,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
       {/* Curriculum Accordion / List */}
       <div className="space-y-6">
-        <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
+        <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2 font-mono">
           <BookOpen className="w-5 h-5 text-teal-400" />
           <span>Módulos del Curso y Temario</span>
         </h2>
@@ -171,7 +171,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                     </div>
 
                     <div className="flex items-center gap-4 text-xs font-mono text-zinc-500">
-                      <span>{Math.round(les.duration / 60)} min</span>
+                      <span>{Math.round((les.duration || 0) / 60)} min</span>
                       <span className="text-teal-400 group-hover:translate-x-1 transition-transform">
                         →
                       </span>
