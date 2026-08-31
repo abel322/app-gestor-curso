@@ -18,14 +18,7 @@ export default async function Page() {
     },
   });
 
-  const purchases = await db.purchase.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
   const users = await db.user.findMany();
-  const progress = await db.courseProgress.findMany();
 
   const serializedCourses = courses.map((course) => ({
     id: course.id,
@@ -35,7 +28,7 @@ export default async function Page() {
     image: course.thumbnailUrl,
     price: course.price,
     published: course.status === "PUBLISHED",
-    status: course.status as 'DRAFT' | 'PUBLISHED' | 'DRIP_SCHEDULED',
+    status: (course.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT') as 'DRAFT' | 'PUBLISHED' | 'DRIP_SCHEDULED',
     createdAt: course.createdAt.toISOString().split("T")[0],
     modules: course.modules.map((mod) => ({
       id: mod.id,
@@ -46,7 +39,7 @@ export default async function Page() {
         id: les.id,
         title: les.title,
         videoUrl: les.videoUrl || undefined,
-        content: les.content || undefined,
+        content: undefined,
         duration: les.duration || 0,
         isFreePreview: les.isFreePreview,
         order: les.order,
@@ -56,31 +49,20 @@ export default async function Page() {
     })),
   }));
 
-  const serializedPurchases = purchases.map((p) => ({
-    ...p,
-    referenceId: p.productId || p.id,
-    productType: (p.productType || "COURSE") as 'COURSE' | 'MUSIC_ASSET',
-    status: p.status as 'COMPLETED' | 'PENDING' | 'REFUNDED',
-    createdAt: p.createdAt.toISOString().split("T")[0],
-  }));
-
   const serializedUsers = users.map((u) => ({
-    ...u,
-    role: u.role as 'ADMIN' | 'STUDENT' | 'CUSTOMER',
+    id: u.id,
+    name: u.name || "Usuario",
+    email: u.email,
+    role: u.role as 'ADMIN' | 'CUSTOMER',
     createdAt: u.createdAt.toISOString().split("T")[0],
-  }));
-
-  const serializedProgress = progress.map((pr) => ({
-    ...pr,
-    completedAt: pr.completedAt ? pr.completedAt.toISOString().split("T")[0] : undefined,
   }));
 
   return (
     <AdminDashboardClient
       initialCourses={serializedCourses}
-      initialPurchases={serializedPurchases}
-      initialUsers={serializedUsers}
-      initialProgress={serializedProgress}
+      initialPurchases={[]}
+      initialUsers={serializedUsers as any}
+      initialProgress={[]}
     />
   );
 }

@@ -26,9 +26,6 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
       modules: {
         include: {
           lessons: {
-            include: {
-              attachments: true,
-            },
             orderBy: {
               order: "asc",
             },
@@ -155,18 +152,6 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                         <h4 className="text-xs md:text-sm font-medium text-zinc-300 group-hover:text-zinc-100">
                           {les.title}
                         </h4>
-                        {les.attachments.length > 0 && (
-                          <div className="flex items-center gap-2 mt-1">
-                            {les.attachments.map((att) => (
-                              <span
-                                key={att.id}
-                                className="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20"
-                              >
-                                📎 {att.fileType}: {att.title}
-                              </span>
-                            ))}
-                          </div>
-                        )}
                       </div>
                     </div>
 

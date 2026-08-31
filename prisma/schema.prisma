@@ -1,5 +1,3 @@
-// Prisma Schema for LMS & Music E-Commerce Dashboard
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,6 +5,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
 }
 
 enum ProductType {
@@ -24,13 +27,13 @@ enum ProductStatus {
 }
 
 model User {
-  id        String           @id @default(uuid())
-  email     String           @unique
-  name      String
-  role      String           @default("STUDENT") // ADMIN, STUDENT, CUSTOMER
-  createdAt DateTime         @default(now())
-  progress  CourseProgress[]
-  purchases Purchase[]
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String?
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
@@ -41,83 +44,57 @@ model Product {
   price           Float
   salePrice       Float?
   type            ProductType
-  category        String         // ej: "Trap", "Lo-Fi", "Mezcla", "Batería", "Piano"
+  category        String         // ej: "Trap", "Lo-Fi", "Mezcla", "Drums", "Piano"
   status          ProductStatus  @default(DRAFT)
   isFeatured      Boolean        @default(false)
   
-  // Multimedia pública
-  thumbnailUrl    String         // Carátula (JPG/PNG)
-  previewAudioUrl String?        // Demo MP3 público (30-60 seg con reproductor)
+  // Archivos Multimedia Públicos
+  thumbnailUrl    String         // Carátula de la imagen
+  previewAudioUrl String?        // Demo MP3 público para reproducción previa
   
-  // Archivo protegido (solo accesible tras compra)
-  downloadFileUrl String?        // URL privada al archivo ZIP/WAV en S3/Cloudflare R2
-  fileSize        String?        // ej: "1.2 GB", "450 MB"
+  // Archivos Protegidos (entrega digital tras compra)
+  downloadFileUrl String?        // URL privada al archivo ZIP/WAV maestro
+  fileSize        String?        // ej: "450 MB", "1.2 GB"
   
-  // Metadatos específicos para Loops / Beats
-  bpm             Int?           // ej: 140
-  key             String?        // ej: "C Minor", "F# Major"
-  formatInfo      String?        // ej: "50 WAV Loops + 20 MIDIs"
+  // Metadatos Musicales (Loops / Samples / Beats)
+  bpm             Int?           // Tempo (ej: 140)
+  key             String?        // Tonalidad (ej: "C Minor", "F# Major")
+  formatInfo      String?        // ej: "24-bit WAV + MIDI Stems"
   
   // Relación con Cursos (solo aplica si type == COURSE)
   modules         CourseModule[]
   
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  purchases       Purchase[]
+
+  @@index([type, status])
+  @@index([category])
 }
 
 model CourseModule {
   id        String    @id @default(cuid())
   title     String
-  order     Int
+  order     Int       @default(0)
   productId String
   product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   lessons   Lesson[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([productId])
 }
 
 model Lesson {
-  id            String             @id @default(cuid())
+  id            String       @id @default(cuid())
   title         String
-  videoUrl      String?
-  content       String?
-  duration      Int?               @default(0) // Duración en segundos
-  isFreePreview Boolean            @default(false)
-  order         Int
+  videoUrl      String
+  duration      Int?         // Duración en segundos
+  isFreePreview Boolean      @default(false)
+  order         Int          @default(0)
   moduleId      String
-  module        CourseModule       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  attachments   LessonAttachment[]
-  progress      CourseProgress[]
-}
+  module        CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
-model LessonAttachment {
-  id       String @id @default(cuid())
-  title    String
-  fileUrl  String
-  fileType String // PDF, MIDI, PRESET, ZIP
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-}
-
-model CourseProgress {
-  id          String    @id @default(uuid())
-  userId      String
-  lessonId    String
-  completed   Boolean   @default(false)
-  completedAt DateTime?
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, lessonId])
-}
-
-model Purchase {
-  id          String       @id @default(uuid())
-  userId      String
-  productId   String?
-  product     Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
-  productType ProductType?
-  amount      Float
-  status      String       @default("COMPLETED") // COMPLETED, PENDING, REFUNDED
-  createdAt   DateTime     @default(now())
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([moduleId])
 }

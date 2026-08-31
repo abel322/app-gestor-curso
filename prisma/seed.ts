@@ -1,4 +1,4 @@
-import { PrismaClient, ProductType, ProductStatus } from "@prisma/client";
+import { PrismaClient, ProductType, ProductStatus, Role } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -6,9 +6,6 @@ async function main() {
   console.log("Poblando la base de datos PostgreSQL con datos de catálogo unificado...");
 
   // Limpieza previa respetando orden de dependencias
-  await prisma.purchase.deleteMany();
-  await prisma.courseProgress.deleteMany();
-  await prisma.lessonAttachment.deleteMany();
   await prisma.lesson.deleteMany();
   await prisma.courseModule.deleteMany();
   await prisma.product.deleteMany();
@@ -16,15 +13,15 @@ async function main() {
 
   // 1. Crear Usuarios
   const adminUser = await prisma.user.create({
-    data: { id: "usr-1", name: "Alex Productor", email: "alex@productor.com", role: "ADMIN" },
+    data: { id: "usr-1", name: "Alex Productor", email: "alex@productor.com", role: Role.ADMIN },
   });
 
-  const studentUser = await prisma.user.create({
-    data: { id: "usr-2", name: "Elena Rostova", email: "elena@beats.io", role: "STUDENT" },
+  const customerUser1 = await prisma.user.create({
+    data: { id: "usr-2", name: "Elena Rostova", email: "elena@beats.io", role: Role.CUSTOMER },
   });
 
   await prisma.user.create({
-    data: { id: "usr-3", name: "Marcos Vance", email: "marcos@diseñodesonido.com", role: "STUDENT" },
+    data: { id: "usr-3", name: "Marcos Vance", email: "marcos@diseñodesonido.com", role: Role.CUSTOMER },
   });
 
   // 2. PRODUCTO: CURSO ONLINE 1
@@ -60,13 +57,6 @@ async function main() {
                   duration: 840,
                   isFreePreview: true,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Cómo identificar frecuencias resonantes en bombo, bajo y sintetizadores usando ecualizadores paramétricos de alta precisión.",
-                  attachments: {
-                    create: [
-                      { id: "att-m1", title: "Stems_Multitrack_WAV_Sesion.zip", fileUrl: "https://storage.synthesis.studio/att/stems.zip", fileType: "ZIP" },
-                      { id: "att-m2", title: "Preset_FabFilter_ProQ3_Limpieza.fxp", fileUrl: "https://storage.synthesis.studio/att/preset.fxp", fileType: "PRESET" },
-                    ],
-                  },
                 },
                 {
                   id: "les-m102",
@@ -75,7 +65,6 @@ async function main() {
                   duration: 620,
                   isFreePreview: false,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Técnicas de alineación de fase y calibración VU meter para que el subgrave nunca enmascare la mezcla.",
                 },
               ],
             },
@@ -93,7 +82,6 @@ async function main() {
                   duration: 980,
                   isFreePreview: false,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Cuándo usar un 1176, LA-2A o SSL Bus Compressor para moldear el ataque y sostenido de baterías y voces.",
                 },
               ],
             },
@@ -136,7 +124,6 @@ async function main() {
                   duration: 740,
                   isFreePreview: true,
                   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                  content: "Aprende a importar formas de onda de audio puro en Xfer Serum y utilizar el editor 3D.",
                 },
               ],
             },
@@ -193,7 +180,7 @@ async function main() {
   });
 
   // 6. PRODUCTO: TRACK / BEAT
-  const trackBeat = await prisma.product.create({
+  await prisma.product.create({
     data: {
       id: "prod-track-darkbeat",
       title: "MIDNIGHT RHAPSODY - Master Beat Track (WAV + Stems)",
@@ -257,27 +244,6 @@ async function main() {
       bpm: 85,
       key: "E Minor",
       formatInfo: "40 Vinyl Drums + 15 Piano Loops",
-    },
-  });
-
-  // 9. Compras de Prueba
-  await prisma.purchase.create({
-    data: {
-      userId: studentUser.id,
-      productId: course1.id,
-      productType: ProductType.COURSE,
-      amount: 89.99,
-      status: "COMPLETED",
-    },
-  });
-
-  await prisma.purchase.create({
-    data: {
-      userId: studentUser.id,
-      productId: samplePack.id,
-      productType: ProductType.SAMPLE_PACK,
-      amount: 24.99,
-      status: "COMPLETED",
     },
   });
 

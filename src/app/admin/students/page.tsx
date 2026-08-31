@@ -19,7 +19,6 @@ export default async function Page() {
   });
 
   const users = await db.user.findMany();
-  const progress = await db.courseProgress.findMany();
 
   const serializedCourses = courses.map((course) => ({
     id: course.id,
@@ -29,7 +28,7 @@ export default async function Page() {
     image: course.thumbnailUrl,
     price: course.price,
     published: course.status === "PUBLISHED",
-    status: course.status as 'DRAFT' | 'PUBLISHED' | 'DRIP_SCHEDULED',
+    status: (course.status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT') as 'DRAFT' | 'PUBLISHED' | 'DRIP_SCHEDULED',
     createdAt: course.createdAt.toISOString().split("T")[0],
     modules: course.modules.map((mod) => ({
       id: mod.id,
@@ -40,7 +39,7 @@ export default async function Page() {
         id: les.id,
         title: les.title,
         videoUrl: les.videoUrl || undefined,
-        content: les.content || undefined,
+        content: undefined,
         duration: les.duration || 0,
         isFreePreview: les.isFreePreview,
         order: les.order,
@@ -51,21 +50,18 @@ export default async function Page() {
   }));
 
   const serializedUsers = users.map((u) => ({
-    ...u,
-    role: u.role as 'ADMIN' | 'STUDENT' | 'CUSTOMER',
+    id: u.id,
+    name: u.name || "Usuario",
+    email: u.email,
+    role: u.role as 'ADMIN' | 'CUSTOMER',
     createdAt: u.createdAt.toISOString().split("T")[0],
-  }));
-
-  const serializedProgress = progress.map((pr) => ({
-    ...pr,
-    completedAt: pr.completedAt ? pr.completedAt.toISOString().split("T")[0] : undefined,
   }));
 
   return (
     <StudentMatrixClient
       initialCourses={serializedCourses}
-      initialUsers={serializedUsers}
-      initialProgress={serializedProgress}
+      initialUsers={serializedUsers as any}
+      initialProgress={[]}
     />
   );
 }

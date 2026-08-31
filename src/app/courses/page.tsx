@@ -43,7 +43,7 @@ export default async function Page() {
         id: les.id,
         title: les.title,
         videoUrl: les.videoUrl || undefined,
-        content: les.content || undefined,
+        content: undefined,
         duration: les.duration || 0,
         isFreePreview: les.isFreePreview,
         order: les.order,

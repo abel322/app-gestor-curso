@@ -353,7 +353,6 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
           isFreePreview: newLes.isFreePreview,
           moduleId: modId,
           videoUrl: newLes.videoUrl || undefined,
-          content: newLes.content || undefined,
           attachments: [],
         },
       });
@@ -390,7 +389,6 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
       await updateLessonAction(editingLesson.lesson.id, {
         title: editingLesson.lesson.title,
         videoUrl: editingLesson.lesson.videoUrl,
-        content: editingLesson.lesson.content,
         duration: editingLesson.lesson.duration,
         isFreePreview: editingLesson.lesson.isFreePreview || false,
       });
@@ -414,21 +412,23 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
         fileType: newAttFileType,
       });
 
-      setEditingLesson({
-        ...editingLesson,
-        lesson: {
-          ...editingLesson.lesson,
-          attachments: [
-            ...editingLesson.lesson.attachments,
-            {
-              id: att.id,
-              title: att.title,
-              fileUrl: att.fileUrl,
-              fileType: att.fileType as any,
-            },
-          ],
-        },
-      });
+      if (att) {
+        setEditingLesson({
+          ...editingLesson,
+          lesson: {
+            ...editingLesson.lesson,
+            attachments: [
+              ...editingLesson.lesson.attachments,
+              {
+                id: att.id,
+                title: att.title,
+                fileUrl: att.fileUrl,
+                fileType: att.fileType as any,
+              },
+            ],
+          },
+        });
+      }
 
       setNewAttTitle("");
       setNewAttUrl("#");

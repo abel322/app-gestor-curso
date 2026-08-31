@@ -104,6 +104,7 @@ export async function createLessonAction(moduleId: string, title: string, order:
       moduleId,
       title,
       order,
+      videoUrl: "",
       duration: 600, // default 10 mins
       isFreePreview: false,
     },
@@ -159,7 +160,6 @@ export async function updateLessonAction(
   data: {
     title: string;
     videoUrl?: string;
-    content?: string;
     duration: number;
     isFreePreview: boolean;
   }
@@ -168,8 +168,7 @@ export async function updateLessonAction(
     where: { id: lessonId },
     data: {
       title: data.title,
-      videoUrl: data.videoUrl || null,
-      content: data.content || null,
+      videoUrl: data.videoUrl || "",
       duration: data.duration,
       isFreePreview: data.isFreePreview,
     },
@@ -195,51 +194,11 @@ export async function addLessonAttachmentAction(
     fileUrl: string;
     fileType: string;
   }
-) {
-  const attachment = await db.lessonAttachment.create({
-    data: {
-      lessonId,
-      title: data.title,
-      fileUrl: data.fileUrl,
-      fileType: data.fileType,
-    },
-    include: {
-      lesson: {
-        include: {
-          module: {
-            include: { product: true }
-          }
-        }
-      }
-    }
-  });
-
-  revalidatePath("/admin/courses/builder");
-  if (attachment.lesson?.module?.product) {
-    revalidatePath(`/courses/${attachment.lesson.module.product.slug}`);
-    revalidatePath(`/courses/${attachment.lesson.module.product.slug}/lessons/${lessonId}`);
-  }
-  return attachment;
+): Promise<{ id: string; title: string; fileUrl: string; fileType: string } | null> {
+  return null;
 }
 
 export async function deleteLessonAttachmentAction(attachmentId: string) {
-  const attachment = await db.lessonAttachment.delete({
-    where: { id: attachmentId },
-    include: {
-      lesson: {
-        include: {
-          module: {
-            include: { product: true }
-          }
-        }
-      }
-    }
-  });
-
-  revalidatePath("/admin/courses/builder");
-  if (attachment.lesson?.module?.product) {
-    revalidatePath(`/courses/${attachment.lesson.module.product.slug}`);
-    revalidatePath(`/courses/${attachment.lesson.module.product.slug}/lessons/${attachment.lessonId}`);
-  }
-  return attachment;
+  return null;
 }
+
