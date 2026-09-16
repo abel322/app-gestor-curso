@@ -41,15 +41,10 @@ export function Navbar() {
             <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-teal-500/50 flex items-center justify-center shadow-glow group-hover:border-teal-400 transition-colors shrink-0">
               <Sparkles className="w-5 h-5 text-teal-400 group-hover:scale-110 transition-transform" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg sm:text-xl tracking-wider text-zinc-100 font-mono">
-                  SYNTHESIS<span className="text-teal-400">.STUDIO</span>
-                </span>
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-zinc-900 text-zinc-400 border border-zinc-800">
-                  ADMIN
-                </span>
-              </div>
+            <div className="flex items-center">
+              <span className="font-extrabold text-lg sm:text-xl tracking-wider text-zinc-100 font-mono">
+                SYNTHESIS<span className="text-teal-400">.STUDIO</span>
+              </span>
             </div>
           </Link>
 
@@ -63,7 +58,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 h-10 px-3.5 rounded-lg text-sm font-semibold transition-all ${
+                  className={`flex items-center gap-2 h-11 px-3.5 rounded-lg text-sm font-semibold transition-all ${
                     isActive
                       ? "bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-sm"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
@@ -76,27 +71,21 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right Action: Role Toggle Simulator */}
+          {/* Right Action: Minimal Profile / Role Simulator */}
           <div className="hidden sm:flex items-center gap-3">
             <button
               onClick={() => setUserRole(userRole === "ADMIN" ? "STUDENT" : "ADMIN")}
-              className="flex items-center gap-1.5 h-10 px-3.5 rounded-full text-xs font-medium bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-700 transition-colors"
-              title="Haz clic para alternar la vista de simulación de rol"
+              className="flex items-center justify-center w-11 h-11 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-700 transition-colors"
+              title={`Modo actual: ${userRole === "ADMIN" ? "ADMIN" : "ESTUDIANTE"}. Clic para cambiar.`}
             >
               {userRole === "ADMIN" ? (
-                <>
-                  <ShieldAlert className="w-4 h-4 text-teal-400" />
-                  <span>Modo: <strong className="text-teal-400 font-semibold">LMS ADMIN</strong></span>
-                </>
+                <ShieldAlert className="w-4 h-4 text-teal-400" />
               ) : (
-                <>
-                  <UserCheck className="w-4 h-4 text-brand-primary" />
-                  <span>Modo: <strong className="text-brand-primary font-semibold">ESTUDIANTE</strong></span>
-                </>
+                <UserCheck className="w-4 h-4 text-brand-primary" />
               )}
             </button>
 
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-brand-primary p-[1px]">
+            <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-teal-500 to-brand-primary p-[1px]">
               <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center text-sm font-bold text-teal-400">
                 AP
               </div>
