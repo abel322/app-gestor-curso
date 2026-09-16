@@ -87,14 +87,14 @@ export default function AdminDashboardClient({
         <div className="flex items-center gap-3">
           <Link
             href="/admin/courses/builder"
-            className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 transition-transform active:scale-95 flex items-center gap-2 shadow-glow"
+            className="h-11 sm:h-10 px-4 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 transition-transform active:scale-95 flex items-center gap-2 shadow-glow"
           >
             <Wrench className="w-4 h-4" />
             <span>Creador de Cursos</span>
           </Link>
           <Link
             href="/admin/students"
-            className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-2"
+            className="h-11 sm:h-10 px-4 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-2"
           >
             <Users className="w-4 h-4 text-purple-400" />
             <span>Matriz de Estudiantes</span>
@@ -109,7 +109,7 @@ export default function AdminDashboardClient({
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card rounded-2xl p-6 relative overflow-hidden space-y-3"
+          className="bg-zinc-900/80 rounded-2xl p-6 relative overflow-hidden space-y-3"
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between">
@@ -132,7 +132,7 @@ export default function AdminDashboardClient({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="glass-card rounded-2xl p-6 relative overflow-hidden space-y-3"
+          className="bg-zinc-900/80 rounded-2xl p-6 relative overflow-hidden space-y-3"
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
           <div className="flex items-center justify-between">
@@ -154,7 +154,7 @@ export default function AdminDashboardClient({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-card rounded-2xl p-6 relative overflow-hidden space-y-3"
+          className="bg-zinc-900/80 rounded-2xl p-6 relative overflow-hidden space-y-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Tasa de Finalización Promedio</span>
@@ -178,7 +178,7 @@ export default function AdminDashboardClient({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="glass-card rounded-2xl p-6 relative overflow-hidden space-y-3 border-amber-500/30"
+          className="bg-zinc-900/80 rounded-2xl p-6 relative overflow-hidden space-y-3 border-amber-500/30"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider">Alertas de Alumnos Atascados</span>
@@ -200,7 +200,7 @@ export default function AdminDashboardClient({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Retention Curve Visualizer */}
-        <div className="glass-card rounded-2xl p-6 space-y-6">
+        <div className="bg-zinc-900/80 rounded-2xl p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
@@ -235,7 +235,7 @@ export default function AdminDashboardClient({
         </div>
 
         {/* Audio Preview Streams Visualizer */}
-        <div className="glass-card rounded-2xl p-6 space-y-6">
+        <div className="bg-zinc-900/80 rounded-2xl p-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
@@ -255,7 +255,7 @@ export default function AdminDashboardClient({
               const heightPercent = (item.streams / maxStreams) * 100;
               return (
                 <div key={item.day} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                  <span className="text-[10px] font-mono text-zinc-400">{item.streams}</span>
+                  <span className="text-xs font-mono text-zinc-400">{item.streams}</span>
                   <motion.div
                     initial={{ height: 0 }}
                     animate={{ height: `${heightPercent}%` }}
@@ -272,7 +272,7 @@ export default function AdminDashboardClient({
       </div>
 
       {/* Transaction Log */}
-      <div className="glass-card rounded-2xl p-6 space-y-4">
+      <div className="bg-zinc-900/80 rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
           <h3 className="font-bold text-base text-zinc-100 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-teal-400" />

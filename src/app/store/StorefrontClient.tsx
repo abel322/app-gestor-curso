@@ -123,7 +123,7 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
       </section>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-[#111319]/90 backdrop-blur-md p-4 rounded-xl border border-zinc-800/80 shadow-lg">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-zinc-900/90 backdrop-blur-md p-4 rounded-xl border border-zinc-800/80 shadow-lg">
         
         {/* Type Badges */}
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
@@ -177,7 +177,7 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="glass-card glass-card-hover rounded-xl p-5 flex flex-col justify-between space-y-4 group relative overflow-hidden bg-[#0c0e17] border border-zinc-800/80 hover:border-teal-500/40 transition-all"
+                className="bg-zinc-900/80 bg-zinc-900/80-hover rounded-xl p-5 flex flex-col justify-between space-y-4 group relative overflow-hidden bg-[#0c0e17] border border-zinc-800/80 hover:border-teal-500/40 transition-all"
               >
                 
                 {/* Product Thumbnail Header */}
@@ -189,13 +189,13 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e17] via-transparent to-black/30" />
                   
-                  <span className={`absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider border flex items-center gap-1 ${typeInfo.color}`}>
+                  <span className={`absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase tracking-wider border flex items-center gap-1 ${typeInfo.color}`}>
                     <Icon className="w-3 h-3" />
                     <span>{typeInfo.label}</span>
                   </span>
 
                   {product.isFeatured && (
-                    <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-400 text-zinc-950 flex items-center gap-1 shadow-glow">
+                    <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded text-xs font-mono font-bold bg-amber-400 text-zinc-950 flex items-center gap-1 shadow-glow">
                       <Star className="w-3 h-3 fill-current" />
                       <span>TOP</span>
                     </span>
@@ -220,7 +220,7 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
                   </div>
 
                   {/* Spec Metadata tags */}
-                  <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-[10px]">
+                  <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-xs">
                     {product.key && (
                       <span className="text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/30">
                         🔑 {product.key}
@@ -269,7 +269,7 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
                       )}
                     </button>
                   ) : (
-                    <span className="text-[10px] font-mono text-zinc-500 italic">No Demo</span>
+                    <span className="text-xs font-mono text-zinc-500 italic">No Demo</span>
                   )}
 
                   {/* Price & Purchase CTA */}
@@ -288,7 +288,7 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       {product.salePrice ? (
-                        <span>${product.salePrice} <span className="line-through text-zinc-500 text-[10px]">${product.price}</span></span>
+                        <span>${product.salePrice} <span className="line-through text-zinc-500 text-xs">${product.price}</span></span>
                       ) : (
                         <span>${product.price}</span>
                       )}
@@ -309,7 +309,7 @@ export default function StorefrontClient({ initialProducts }: StorefrontClientPr
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#111319] border border-zinc-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative font-sans"
+            className="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative font-sans"
           >
             <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
               <div className="flex items-center gap-2">

@@ -41,7 +41,7 @@ export function GlobalAudioPlayer() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
-        className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d0f17]/95 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-4 py-3 text-zinc-100"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/80 shadow-2xl px-4 py-3 text-zinc-100"
       >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           
@@ -69,7 +69,7 @@ export function GlobalAudioPlayer() {
                 {currentTrack.title}
               </h4>
               <p className="text-xs text-zinc-400 truncate flex items-center gap-1.5 mt-0.5">
-                <span className="inline-block px-1.5 py-0.5 text-[10px] uppercase tracking-wider rounded bg-teal-500/10 text-teal-400 border border-teal-500/30">
+                <span className="inline-block px-1.5 py-0.5 text-xs uppercase tracking-wider rounded bg-teal-500/10 text-teal-400 border border-teal-500/30">
                   {currentTrack.productType || "PREESCUCHA DE AUDIO"}
                 </span>
                 <span>{currentTrack.artist || "Tienda de Producción"}</span>

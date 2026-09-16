@@ -9,9 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#090a0f",
-        card: "#111319",
+        background: "#09090b",
+        card: "#18181b",
         brand: {
+          primary: "#7c3aed", /* violet-600 */
           teal: "#2dd4bf",
           cyan: "#06b6d4",
           purple: "#a855f7",

@@ -158,7 +158,7 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
           </div>
 
           {/* Tab Content */}
-          <div className="glass-card rounded-xl p-6 min-h-[160px]">
+          <div className="bg-zinc-900/80 rounded-xl p-6 min-h-[160px]">
             {activeTab === "NOTES" && (
               <div className="prose prose-invert prose-sm max-w-none text-zinc-300 leading-relaxed">
                 <p>{currentLesson?.content || "Sin notas de la lección disponibles."}</p>
@@ -174,7 +174,7 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
                       className="flex items-center justify-between p-3 rounded-lg bg-zinc-900 border border-zinc-800/80 hover:border-purple-500/40 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30 uppercase">
+                        <span className="px-2 py-0.5 rounded text-xs font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30 uppercase">
                           {att.fileType}
                         </span>
                         <span className="text-xs font-medium text-zinc-200">{att.title}</span>
@@ -217,9 +217,9 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
                   <input
                     type="text"
                     placeholder="Haz una pregunta o comparte tu comentario..."
-                    className="flex-1 px-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 focus:outline-none focus:border-teal-500/60"
+                    className="flex-1 h-11 sm:h-10 px-4 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 focus:outline-none focus:border-teal-500/60"
                   />
-                  <button className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300">
+                  <button className="h-11 sm:h-10 px-4 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300">
                     Publicar
                   </button>
                 </div>
@@ -232,7 +232,7 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
             {prevLesson ? (
               <Link
                 href={`/courses/${course.slug}/lessons/${prevLesson.id}`}
-                className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-2 max-w-[45%]"
+                className="h-11 sm:h-10 px-4 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-medium flex items-center gap-2 max-w-[45%]"
               >
                 <ArrowLeft className="w-4 h-4 shrink-0" />
                 <span className="truncate">Anterior: {prevLesson.title}</span>
@@ -244,7 +244,7 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
             {nextLesson ? (
               <Link
                 href={`/courses/${course.slug}/lessons/${nextLesson.id}`}
-                className="px-4 py-2 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 shadow-glow flex items-center gap-2 max-w-[45%]"
+                className="h-11 sm:h-10 px-4 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs hover:bg-teal-300 shadow-glow flex items-center gap-2 max-w-[45%]"
               >
                 <span className="truncate">Siguiente: {nextLesson.title}</span>
                 <ArrowRight className="w-4 h-4 shrink-0" />
@@ -258,7 +258,7 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
 
         {/* Right Column */}
         <div className="space-y-4">
-          <div className="glass-card rounded-2xl p-4 border border-zinc-800/80 space-y-4">
+          <div className="bg-zinc-900/80 rounded-2xl p-4 border border-zinc-800/80 space-y-4">
             <h3 className="font-bold text-sm text-zinc-200 font-mono uppercase tracking-wider flex items-center gap-2">
               <Layers className="w-4 h-4 text-teal-400" />
               <span>Lista de Lecciones</span>
@@ -287,7 +287,7 @@ export default function LessonPlayerClient({ course, lessonId }: LessonPlayerCli
                             <Disc className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-teal-400 animate-spin" : "text-zinc-500"}`} />
                             <span className="truncate">{les.title}</span>
                           </div>
-                          <span className="font-mono text-[10px] text-zinc-500">
+                          <span className="font-mono text-xs text-zinc-500">
                             {Math.round((les.duration || 0) / 60)}m
                           </span>
                         </Link>

@@ -57,7 +57,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
       </Link>
 
       {/* Hero Overview Header */}
-      <div className="glass-card rounded-2xl p-6 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative overflow-hidden">
+      <div className="bg-zinc-900/80 rounded-2xl p-6 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center relative overflow-hidden">
         <div className="lg:col-span-2 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono">
             <Award className="w-3.5 h-3.5" />
@@ -121,7 +121,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
           {course.modules.map((mod, mIdx) => (
             <div
               key={mod.id}
-              className="glass-card rounded-xl overflow-hidden border border-zinc-800/80"
+              className="bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800/80"
             >
               {/* Module Bar */}
               <div className="bg-zinc-900/80 px-5 py-4 border-b border-zinc-800/80 flex items-center justify-between">
@@ -139,7 +139,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
               </div>
 
               {/* Lesson Items */}
-              <div className="divide-y divide-zinc-800/40 bg-[#0d0f17]/50">
+              <div className="divide-y divide-zinc-800/40 bg-zinc-950/50">
                 {mod.lessons.map((les) => (
                   <Link
                     key={les.id}

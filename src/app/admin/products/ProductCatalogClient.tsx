@@ -202,7 +202,7 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
 
         <button
           onClick={handleOpenCreateModal}
-          className="px-5 py-3 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs font-mono hover:bg-teal-300 transition-transform active:scale-95 shadow-glow flex items-center gap-2 shrink-0"
+          className="h-11 sm:h-12 px-5 rounded-xl bg-teal-400 text-zinc-950 font-bold text-xs font-mono hover:bg-teal-300 transition-transform active:scale-95 shadow-glow flex items-center gap-2 shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Crear Nuevo Producto</span>
@@ -298,14 +298,14 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
 
                   {/* Top Badges */}
                   <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border flex items-center gap-1.5 ${typeInfo.color}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-mono font-bold border flex items-center gap-1.5 ${typeInfo.color}`}>
                       <Icon className="w-3 h-3" />
                       <span>{typeInfo.label}</span>
                     </span>
 
                     <button
                       onClick={() => handleToggleStatus(product.id, product.status)}
-                      className={`pointer-events-auto px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border transition-colors flex items-center gap-1 ${
+                      className={`pointer-events-auto px-2.5 py-1 rounded-full text-xs font-mono font-bold border transition-colors flex items-center gap-1 ${
                         isPublished
                           ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30"
                           : "bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30"
@@ -330,7 +330,7 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
 
                   {/* Featured Badge */}
                   {product.isFeatured && (
-                    <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-400 text-zinc-950 flex items-center gap-1">
+                    <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded text-xs font-mono font-bold bg-amber-400 text-zinc-950 flex items-center gap-1">
                       <Star className="w-3 h-3 fill-current" />
                       <span>DESTACADO</span>
                     </div>
@@ -358,17 +358,17 @@ export default function ProductCatalogClient({ initialProducts }: ProductCatalog
                     {(product.bpm || product.key || product.formatInfo) && (
                       <div className="flex flex-wrap items-center gap-2 pt-1">
                         {product.bpm && (
-                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-teal-300">
+                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-mono text-teal-300">
                             ⚡ {product.bpm} BPM
                           </span>
                         )}
                         {product.key && (
-                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-cyan-300">
+                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-mono text-cyan-300">
                             🎵 {product.key}
                           </span>
                         )}
                         {product.formatInfo && (
-                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-400 truncate max-w-[200px]">
+                          <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 truncate max-w-[200px]">
                             {product.formatInfo}
                           </span>
                         )}
