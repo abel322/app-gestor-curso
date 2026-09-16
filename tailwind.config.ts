@@ -9,6 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        zinc: {
+          850: "#1f2128",
+        },
         background: "#09090b",
         card: "#18181b",
         brand: {
