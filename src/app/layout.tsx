@@ -17,10 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-zinc-950 text-zinc-100 text-sm sm:text-base min-h-screen flex flex-col antialiased">
+      <body className="bg-[#0B0F17] text-slate-100 text-sm sm:text-base min-h-screen flex flex-col antialiased">
         <AudioProvider>
+          <div className="fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]"></div>
           <Navbar />
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-0">
             {children}
           </main>
           <GlobalAudioPlayer />
