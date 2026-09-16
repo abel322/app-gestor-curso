@@ -101,7 +101,7 @@ export default function StudentMatrixClient({
       </div>
 
       {courses.length === 0 ? (
-        <div className="glass-card rounded-2xl p-12 border border-zinc-800 text-center space-y-4">
+        <div className="bg-zinc-900/80 rounded-2xl p-12 border border-zinc-800 text-center space-y-4">
           <BookOpen className="w-12 h-12 text-zinc-600 mx-auto" />
           <h3 className="text-zinc-300 font-bold">No hay cursos creados</h3>
           <p className="text-zinc-500 text-xs">
@@ -111,7 +111,7 @@ export default function StudentMatrixClient({
       ) : selectedCourse ? (
         <>
           {/* Course Picker Header Bar */}
-          <div className="glass-card rounded-2xl p-6 border border-zinc-800/80 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="bg-zinc-900/80 rounded-2xl p-4 sm:p-6 border border-zinc-800/80 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3 w-full md:w-auto">
               <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 shadow-glow-purple">
                 <BookOpen className="w-5 h-5" />
@@ -142,7 +142,7 @@ export default function StudentMatrixClient({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Card 1: Total Enrolled */}
-            <div className="glass-card rounded-2xl p-6 border border-zinc-800 relative overflow-hidden space-y-2">
+            <div className="bg-zinc-900/80 rounded-2xl p-6 border border-zinc-800 relative overflow-hidden space-y-2">
               <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-zinc-400 uppercase">Estudiantes Inscritos</span>
@@ -155,7 +155,7 @@ export default function StudentMatrixClient({
             </div>
 
             {/* Card 2: Completion Percentage */}
-            <div className="glass-card rounded-2xl p-6 border border-zinc-800 relative overflow-hidden space-y-2">
+            <div className="bg-zinc-900/80 rounded-2xl p-6 border border-zinc-800 relative overflow-hidden space-y-2">
               <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-zinc-400 uppercase">Tasa Promedio de Finalización</span>
@@ -173,7 +173,7 @@ export default function StudentMatrixClient({
             </div>
 
             {/* Card 3: Stuck Bottleneck Alert */}
-            <div className="glass-card rounded-2xl p-6 border border-amber-500/40 relative overflow-hidden space-y-2 bg-gradient-to-b from-amber-500/5 to-transparent">
+            <div className="bg-zinc-900/80 rounded-2xl p-6 border border-amber-500/40 relative overflow-hidden space-y-2 bg-gradient-to-b from-amber-500/5 to-transparent">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono text-amber-400 uppercase font-bold flex items-center gap-1.5">
                   <AlertTriangle className="w-4 h-4 text-amber-400 animate-pulse" />
@@ -194,7 +194,7 @@ export default function StudentMatrixClient({
           </div>
 
           {/* Student Table */}
-          <div className="glass-card rounded-2xl overflow-hidden border border-zinc-800/80 shadow-2xl space-y-4">
+          <div className="bg-zinc-900/80 rounded-2xl overflow-hidden border border-zinc-800/80 shadow-2xl space-y-4">
             <div className="p-4 px-6 bg-zinc-900/60 border-b border-zinc-800 flex items-center justify-between">
               <h3 className="font-extrabold text-sm text-zinc-100 flex items-center gap-2">
                 <Users className="w-4 h-4 text-purple-400" />
@@ -260,12 +260,12 @@ export default function StudentMatrixClient({
 
                         <td className="p-4">
                           {mockStuck ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
                               <AlertTriangle className="w-3 h-3 animate-pulse" />
                               <span>ATASCADO EN LECCIÓN</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-teal-500/10 text-teal-400 border border-teal-500/30">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-teal-500/10 text-teal-400 border border-teal-500/30">
                               <CheckCircle2 className="w-3 h-3" />
                               <span>AVANZANDO NORMAL</span>
                             </span>

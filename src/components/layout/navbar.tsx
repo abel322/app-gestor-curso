@@ -32,32 +32,29 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#090a0f]/90 backdrop-blur-md border-b border-zinc-800/80">
+    <header className="sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
           {/* Logo */}
           <Link href="/admin/products" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-teal-500/50 flex items-center justify-center shadow-glow group-hover:border-teal-400 transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-teal-500/50 flex items-center justify-center shadow-glow group-hover:border-teal-400 transition-colors shrink-0">
               <Sparkles className="w-5 h-5 text-teal-400 group-hover:scale-110 transition-transform" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg tracking-wider text-zinc-100 font-mono">
+                <span className="font-extrabold text-lg sm:text-xl tracking-wider text-zinc-100 font-mono">
                   SYNTHESIS<span className="text-teal-400">.STUDIO</span>
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-teal-500/10 text-teal-300 border border-teal-500/30">
-                  LMS & MARKETPLACE ADMIN
+                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-zinc-900 text-zinc-400 border border-zinc-800">
+                  ADMIN
                 </span>
               </div>
-              <span className="block text-[10px] text-zinc-400 uppercase tracking-widest -mt-0.5 font-sans">
-                Gestión Central de Catálogo, Cursos y Beats
-              </span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1.5">
             {navItems.map((item) => {
               if (item.roleRequired && userRole !== item.roleRequired) return null;
               const isActive = pathname === item.href || (item.href !== "/store" && pathname.startsWith(item.href));
@@ -66,13 +63,13 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all ${
+                  className={`flex items-center gap-2 h-10 px-3.5 rounded-lg text-sm font-semibold transition-all ${
                     isActive
-                      ? "bg-teal-500/10 text-teal-300 border border-teal-500/40 shadow-glow"
+                      ? "bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-sm"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-teal-400" : "text-zinc-400"}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? "text-teal-400" : "text-zinc-400"}`} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -80,37 +77,38 @@ export function Navbar() {
           </nav>
 
           {/* Right Action: Role Toggle Simulator */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             <button
               onClick={() => setUserRole(userRole === "ADMIN" ? "STUDENT" : "ADMIN")}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-teal-500/50 transition-colors"
+              className="flex items-center gap-1.5 h-10 px-3.5 rounded-full text-xs font-medium bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-zinc-700 transition-colors"
               title="Haz clic para alternar la vista de simulación de rol"
             >
               {userRole === "ADMIN" ? (
                 <>
-                  <ShieldAlert className="w-3.5 h-3.5 text-teal-400" />
-                  <span>Modo: <strong className="text-teal-300">LMS ADMIN</strong></span>
+                  <ShieldAlert className="w-4 h-4 text-teal-400" />
+                  <span>Modo: <strong className="text-teal-400 font-semibold">LMS ADMIN</strong></span>
                 </>
               ) : (
                 <>
-                  <UserCheck className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Modo: <strong className="text-purple-300">ESTUDIANTE</strong></span>
+                  <UserCheck className="w-4 h-4 text-brand-primary" />
+                  <span>Modo: <strong className="text-brand-primary font-semibold">ESTUDIANTE</strong></span>
                 </>
               )}
             </button>
 
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-purple-600 p-[1px]">
-              <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center text-xs font-bold text-teal-300">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-brand-primary p-[1px]">
+              <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center text-sm font-bold text-teal-400">
                 AP
               </div>
             </div>
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
+          <div className="lg:hidden flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-zinc-400 hover:text-zinc-100"
+              className="p-2 text-zinc-400 hover:text-zinc-100 flex items-center justify-center h-11 w-11 rounded-lg hover:bg-zinc-900 transition-colors"
+              aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -121,17 +119,41 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0d0f17] border-b border-zinc-800 px-4 pt-2 pb-4 space-y-2">
+        <div className="lg:hidden bg-zinc-950 border-b border-zinc-800 px-4 pt-2 pb-6 space-y-2">
+
+          <div className="mb-4 pb-4 border-b border-zinc-900 flex justify-between items-center sm:hidden">
+             <button
+              onClick={() => setUserRole(userRole === "ADMIN" ? "STUDENT" : "ADMIN")}
+              className="flex items-center justify-center w-full gap-2 h-11 px-4 rounded-xl text-sm font-medium bg-zinc-900 border border-zinc-800 text-zinc-300"
+            >
+              {userRole === "ADMIN" ? (
+                <>
+                  <ShieldAlert className="w-4 h-4 text-teal-400" />
+                  <span>Modo: <strong className="text-teal-400 font-semibold">ADMIN</strong></span>
+                </>
+              ) : (
+                <>
+                  <UserCheck className="w-4 h-4 text-brand-primary" />
+                  <span>Modo: <strong className="text-brand-primary font-semibold">ESTUDIANTE</strong></span>
+                </>
+              )}
+            </button>
+          </div>
+
           {navItems.map((item) => {
             const Icon = item.icon;
+            if (item.roleRequired && userRole !== item.roleRequired) return null;
+            const isActive = pathname === item.href || (item.href !== "/store" && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-zinc-300 hover:bg-zinc-800"
+                className={`flex items-center gap-3 h-12 px-4 rounded-xl text-sm font-medium transition-colors ${
+                  isActive ? "bg-zinc-900 text-teal-400 border border-zinc-800" : "text-zinc-300 hover:bg-zinc-900/50"
+                }`}
               >
-                <Icon className="w-4 h-4 text-teal-400" />
+                <Icon className={`w-5 h-5 ${isActive ? "text-teal-400" : "text-zinc-400"}`} />
                 <span>{item.label}</span>
               </Link>
             );

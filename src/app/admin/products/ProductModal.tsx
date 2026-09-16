@@ -147,7 +147,7 @@ export default function ProductModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-3xl my-8 bg-[#0d0f17] border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden text-zinc-100 font-sans">
+      <div className="relative w-full max-w-3xl my-8 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden text-zinc-100 font-sans">
         
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-zinc-950/60">
@@ -446,7 +446,7 @@ export default function ProductModal({
                 if (audioObj) audioObj.pause();
                 onClose();
               }}
-              className="px-4 py-2 rounded-xl text-xs font-mono text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
+              className="h-11 sm:h-10 px-4 rounded-xl text-xs font-mono text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors"
             >
               Cancelar
             </button>
