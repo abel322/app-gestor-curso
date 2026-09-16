@@ -555,12 +555,12 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
   return (
     <div className="space-y-8 pb-16">
       {/* 1. Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/80 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6 transition-colors">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 transition-colors">
             Panel de Creación y Estructuración de Cursos
           </h1>
-          <p className="text-sm text-zinc-400 font-normal leading-relaxed mt-1">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed mt-1 transition-colors">
             Gestión de temarios, módulos, dictado por voz y recursos descargables.
           </p>
         </div>
@@ -576,7 +576,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
           <button
             onClick={handleSaveAll}
-            className="h-11 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-zinc-200 border border-zinc-800 font-medium text-sm transition-all active:scale-95 flex items-center gap-2"
+            className="h-11 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 shadow-sm dark:bg-zinc-900 dark:hover:bg-zinc-850 dark:text-zinc-200 dark:border-zinc-800 font-medium text-sm transition-all active:scale-95 flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             <span>Sincronizar DB</span>
@@ -586,14 +586,14 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
       {/* Toast Notification */}
       {savedNotification && (
-        <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl text-zinc-200 text-sm flex items-center justify-between shadow-lg shadow-black/40">
+        <div className="bg-white border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800 p-4 rounded-xl text-zinc-800 dark:text-zinc-200 text-sm flex items-center justify-between shadow-lg shadow-black/5 dark:shadow-black/40 transition-colors">
           <div className="flex items-center gap-2.5">
-            <Check className="w-4 h-4 text-indigo-400" />
+            <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             <span className="font-medium">{savedNotification}</span>
           </div>
           <button
             onClick={() => setSavedNotification(null)}
-            className="text-zinc-400 hover:text-zinc-200 p-1"
+            className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1"
           >
             <X className="w-4 h-4" />
           </button>
@@ -602,31 +602,31 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
       {/* Active Course Selector & Primary Publication Banner */}
       {courses.length === 0 ? (
-        <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800/70 rounded-2xl p-8 shadow-sm text-center space-y-4">
-          <BookOpen className="w-12 h-12 text-zinc-600 mx-auto" />
-          <h3 className="text-zinc-200 font-semibold text-lg">No hay cursos en la base de datos</h3>
-          <p className="text-zinc-400 text-sm max-w-md mx-auto">
+        <div className="bg-white/80 dark:bg-zinc-900/50 backdrop-blur-md border border-zinc-200/90 dark:border-zinc-800/70 rounded-2xl p-8 shadow-sm text-center space-y-4 transition-colors">
+          <BookOpen className="w-12 h-12 text-zinc-400 dark:text-zinc-600 mx-auto" />
+          <h3 className="text-zinc-800 dark:text-zinc-200 font-semibold text-lg">No hay cursos en la base de datos</h3>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-md mx-auto">
             Comienza haciendo clic en el botón superior &quot;Crear Nuevo Curso&quot; para agregar el primero a la plataforma.
           </p>
         </div>
       ) : selectedCourse ? (
         <>
           {/* Main Elevated Card: Course Overview & Controls */}
-          <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800/70 rounded-2xl p-5 sm:p-6 shadow-sm space-y-6">
+          <div className="bg-white/80 dark:bg-zinc-900/50 backdrop-blur-md border border-zinc-200/90 dark:border-zinc-800/70 rounded-2xl p-5 sm:p-6 shadow-sm space-y-6 transition-colors">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               {/* Left: Course Picker */}
               <div className="w-full lg:w-1/2 space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2 flex items-center gap-2">
-                  <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
+                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2 flex items-center gap-2">
+                  <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                   <span>Curso Seleccionado para Administración</span>
                 </label>
                 <select
                   value={selectedCourseId}
                   onChange={(e) => setSelectedCourseId(e.target.value)}
-                  className="w-full h-11 bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 text-sm text-zinc-100 focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all outline-none"
+                  className="w-full h-11 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3.5 text-sm text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all outline-none"
                 >
                   {courses.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-zinc-950 text-zinc-200">
+                    <option key={c.id} value={c.id} className="bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-200">
                       {c.title} • [{c.status === "PUBLISHED" ? "PUBLICADO" : "BORRADOR"}] (${c.price})
                     </option>
                   ))}
@@ -634,20 +634,20 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
               </div>
 
               {/* Right: State & Publish Action */}
-              <div className="w-full lg:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-4">
+              <div className="w-full lg:w-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-zinc-50/80 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl p-4 transition-colors">
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">
                     Estado en la Tienda Web
                   </div>
                   <div className="flex items-center gap-2">
                     {selectedCourse.published ? (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 dark:border-emerald-500/20">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                         <span>PUBLICADO COMERCIALMENTE</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                        <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/25 dark:border-amber-500/20">
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
                         <span>BORRADOR PRIVADO</span>
                       </span>
                     )}
@@ -658,7 +658,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   onClick={togglePublishStatus}
                   className={`h-11 px-5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
                     selectedCourse.published
-                      ? "bg-zinc-900 hover:bg-red-500/10 hover:text-red-300 hover:border-red-500/30 text-zinc-300 border border-zinc-800"
+                      ? "bg-white hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-zinc-700 border border-zinc-200 shadow-sm dark:bg-zinc-900 dark:hover:bg-red-500/10 dark:hover:text-red-300 dark:hover:border-red-500/30 dark:text-zinc-300 dark:border-zinc-800"
                       : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-500/20"
                   }`}
                 >
@@ -670,45 +670,45 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
             {/* Symmetric Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-              <div className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-3.5 flex flex-col gap-1">
-                <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
+              <div className="bg-zinc-50/80 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl p-3.5 flex flex-col gap-1 transition-colors">
+                <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                   ID del Curso
                 </span>
-                <span className="text-sm font-semibold text-zinc-200 font-mono truncate" title={selectedCourse.id}>
+                <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-200 font-mono truncate" title={selectedCourse.id}>
                   {selectedCourse.id}
                 </span>
               </div>
 
-              <div className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-3.5 flex flex-col gap-1">
-                <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
+              <div className="bg-zinc-50/80 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl p-3.5 flex flex-col gap-1 transition-colors">
+                <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                   Módulos Totales
                 </span>
-                <span className="text-sm font-semibold text-zinc-200">
+                <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-200">
                   {selectedCourse.modules?.length || 0} Módulos
                 </span>
               </div>
 
-              <div className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-3.5 flex flex-col gap-1">
-                <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
+              <div className="bg-zinc-50/80 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl p-3.5 flex flex-col gap-1 transition-colors">
+                <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                   Lecciones Totales
                 </span>
-                <span className="text-sm font-semibold text-zinc-200">
+                <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-200">
                   {selectedCourse.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 0} Lecciones
                 </span>
               </div>
 
-              <div className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-3.5 flex flex-row items-center justify-between">
+              <div className="bg-zinc-50/80 dark:bg-zinc-950/60 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl p-3.5 flex flex-row items-center justify-between transition-colors">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                     Precio Público
                   </span>
-                  <span className="text-sm font-semibold text-zinc-200">
+                  <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-200">
                     ${selectedCourse.price} USD
                   </span>
                 </div>
                 <Link
                   href="/store"
-                  className="p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 border border-zinc-800 transition-colors"
+                  className="p-2 rounded-lg bg-white dark:bg-zinc-900 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 transition-colors"
                   title="Ver en tienda"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -721,33 +721,33 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
           <div className="space-y-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-zinc-100 flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-indigo-400" />
+                <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-2 transition-colors">
+                  <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   <span>Editor de Temario (Módulos y Lecciones)</span>
                 </h2>
-                <p className="text-sm text-zinc-400 font-normal leading-relaxed mt-0.5">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed mt-0.5 transition-colors">
                   Organiza los módulos y abre el editor con dictado por voz para cada lección.
                 </p>
               </div>
 
               <button
                 onClick={() => setShowAddModule(true)}
-                className="h-11 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-zinc-200 border border-zinc-800 text-sm font-medium transition-all flex items-center gap-2"
+                className="h-11 px-4 rounded-xl bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 shadow-sm dark:bg-zinc-900 dark:hover:bg-zinc-850 dark:text-zinc-200 dark:border-zinc-800 text-sm font-medium transition-all flex items-center gap-2"
               >
-                <Plus className="w-4 h-4 text-indigo-400" />
+                <Plus className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>Añadir Nuevo Módulo</span>
               </button>
             </div>
 
             {/* Modal / Form to Add Module */}
             {showAddModule && (
-              <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-4 flex flex-col sm:flex-row gap-3">
+              <div className="bg-white/90 border border-zinc-200/90 shadow-sm dark:bg-zinc-900/60 dark:border-zinc-800/80 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 transition-colors">
                 <input
                   type="text"
                   placeholder="Ej: Módulo 1: Ecualización y Balance"
                   value={newModuleTitle}
                   onChange={(e) => setNewModuleTitle(e.target.value)}
-                  className="flex-1 h-11 px-4 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-zinc-200 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40"
+                  className="flex-1 h-11 px-4 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-200 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40"
                 />
                 <div className="flex gap-2">
                   <button
@@ -758,7 +758,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   </button>
                   <button
                     onClick={() => setShowAddModule(false)}
-                    className="px-4 py-2.5 text-zinc-400 text-sm hover:text-zinc-200 rounded-xl"
+                    className="px-4 py-2.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 text-sm rounded-xl"
                   >
                     Cancelar
                   </button>
@@ -771,16 +771,16 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
               {(selectedCourse.modules || []).map((mod, mIdx) => (
                 <div
                   key={mod.id}
-                  className="bg-zinc-900/40 border border-zinc-800/70 rounded-2xl overflow-hidden shadow-sm"
+                  className="bg-white/80 border border-zinc-200/90 shadow-sm dark:bg-zinc-900/40 dark:border-zinc-800/70 rounded-2xl overflow-hidden transition-colors"
                 >
                   {/* Module Header Bar */}
-                  <div className="bg-zinc-900/80 p-4 border-b border-zinc-800/70 flex items-center justify-between">
+                  <div className="bg-zinc-50/90 border-b border-zinc-200/90 dark:bg-zinc-900/80 dark:border-zinc-800/70 p-4 flex items-center justify-between transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col gap-0.5">
                         <button
                           onClick={() => moveModule(mod.id, "up")}
                           disabled={mIdx === 0}
-                          className="text-zinc-400 hover:text-indigo-400 disabled:opacity-20 transition-colors p-1.5 rounded-lg hover:bg-zinc-800"
+                          className="text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-20 transition-colors p-1.5 rounded-lg hover:bg-zinc-200/70 dark:hover:bg-zinc-800"
                           title="Mover arriba"
                         >
                           <ArrowUp className="w-3.5 h-3.5" />
@@ -788,32 +788,32 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                         <button
                           onClick={() => moveModule(mod.id, "down")}
                           disabled={mIdx === (selectedCourse.modules?.length || 1) - 1}
-                          className="text-zinc-400 hover:text-indigo-400 disabled:opacity-20 transition-colors p-1.5 rounded-lg hover:bg-zinc-800"
+                          className="text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-20 transition-colors p-1.5 rounded-lg hover:bg-zinc-200/70 dark:hover:bg-zinc-800"
                           title="Mover abajo"
                         >
                           <ArrowDown className="w-3.5 h-3.5" />
                         </button>
                       </div>
 
-                      <span className="w-7 h-7 rounded-lg bg-zinc-800 text-zinc-300 font-semibold text-xs flex items-center justify-center border border-zinc-700/50">
+                      <span className="w-7 h-7 rounded-lg bg-zinc-200/80 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 font-semibold text-xs flex items-center justify-center border border-zinc-300/60 dark:border-zinc-700/50">
                         {mIdx + 1}
                       </span>
 
-                      <h3 className="font-semibold text-sm text-zinc-100">{mod.title}</h3>
+                      <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">{mod.title}</h3>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleAddNewLesson(mod.id)}
-                        className="h-9 px-3 rounded-lg bg-zinc-800/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-700/60 text-xs font-medium flex items-center gap-1.5 transition-all"
+                        className="h-9 px-3 rounded-lg bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 shadow-xs dark:bg-zinc-800/80 dark:hover:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700/60 text-xs font-medium flex items-center gap-1.5 transition-all"
                       >
-                        <FilePlus className="w-3.5 h-3.5 text-indigo-400" />
+                        <FilePlus className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                         <span>Añadir Lección</span>
                       </button>
 
                       <button
                         onClick={() => deleteModule(mod.id)}
-                        className="p-2 text-zinc-400 hover:text-rose-400 transition-colors rounded-lg hover:bg-rose-500/10"
+                        className="p-2 text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10"
                         title="Eliminar módulo"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -822,26 +822,26 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   </div>
 
                   {/* Lessons List inside Module */}
-                  <div className="divide-y divide-zinc-800/40 bg-zinc-950/40">
+                  <div className="divide-y divide-zinc-200/80 bg-white/50 dark:divide-zinc-800/40 dark:bg-zinc-950/40 transition-colors">
                     {(mod.lessons || []).map((les, lIdx) => (
                       <div
                         key={les.id}
-                        className="p-4 px-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 hover:bg-zinc-850/30 transition-colors"
+                        className="p-4 px-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 hover:bg-zinc-50/90 dark:hover:bg-zinc-850/30 transition-colors"
                       >
                         {/* Left Details */}
                         <div className="flex items-start sm:items-center gap-3.5">
-                          <div className="flex flex-col gap-0.5 text-zinc-500 mt-0.5 sm:mt-0">
+                          <div className="flex flex-col gap-0.5 text-zinc-400 mt-0.5 sm:mt-0">
                             <button
                               onClick={() => moveLesson(mod.id, les.id, "up")}
                               disabled={lIdx === 0}
-                              className="text-zinc-400 hover:text-indigo-400 disabled:opacity-20 p-1.5 rounded-lg hover:bg-zinc-800"
+                              className="text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-20 p-1.5 rounded-lg hover:bg-zinc-200/70 dark:hover:bg-zinc-800"
                             >
                               <ArrowUp className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => moveLesson(mod.id, les.id, "down")}
                               disabled={lIdx === (mod.lessons?.length || 1) - 1}
-                              className="text-zinc-400 hover:text-indigo-400 disabled:opacity-20 p-1.5 rounded-lg hover:bg-zinc-800"
+                              className="text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-20 p-1.5 rounded-lg hover:bg-zinc-200/70 dark:hover:bg-zinc-800"
                             >
                               <ArrowDown className="w-3.5 h-3.5" />
                             </button>
@@ -849,27 +849,27 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
                           <div className="space-y-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <h4 className="text-sm font-medium text-zinc-100">{les.title}</h4>
+                              <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{les.title}</h4>
 
                               {les.isFreePreview && (
-                                <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                                <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-500/10 dark:text-emerald-400 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/25 dark:border-emerald-500/20">
                                   <Eye className="w-3 h-3" /> Vista Previa Gratis
                                 </span>
                               )}
 
                               {les.videoUrl && (
-                                <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/20">
+                                <span className="inline-flex items-center gap-1 text-xs font-medium text-indigo-700 bg-indigo-500/10 dark:text-indigo-400 dark:bg-indigo-500/10 px-2 py-0.5 rounded-full border border-indigo-500/25 dark:border-indigo-500/20">
                                   <Video className="w-3 h-3" /> Vídeo
                                 </span>
                               )}
                             </div>
 
                             {/* Excerpt */}
-                            <p className="text-xs text-zinc-400 line-clamp-1">
+                            <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-1">
                               {les.content || "Sin explicación teórica redactada."}
                             </p>
 
-                            <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 pt-0.5">
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 dark:text-zinc-500 pt-0.5">
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3.5 h-3.5 text-zinc-400" />
                                 <span>{Math.round((les.duration || 0) / 60)} min</span>
@@ -878,9 +878,9 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                               {(les.attachments || []).map((att) => (
                                 <span
                                   key={att.id}
-                                  className="text-xs font-medium uppercase bg-zinc-900 text-zinc-300 px-2 py-0.5 rounded-md border border-zinc-800 flex items-center gap-1"
+                                  className="text-xs font-medium uppercase bg-zinc-100 text-zinc-700 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:border-zinc-800 px-2 py-0.5 rounded-md flex items-center gap-1"
                                 >
-                                  <Paperclip className="w-3 h-3 text-indigo-400" />
+                                  <Paperclip className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
                                   <span>{att.fileType}: {att.title}</span>
                                 </span>
                               ))}
@@ -901,15 +901,15 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                                 lesson: { ...les, attachments: les.attachments || [] },
                               })
                             }
-                            className="h-9 px-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-850 text-zinc-200 border border-zinc-800 text-xs font-medium flex items-center gap-2 transition-all"
+                            className="h-9 px-3.5 rounded-xl bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 shadow-xs dark:bg-zinc-900 dark:hover:bg-zinc-850 dark:text-zinc-200 dark:border-zinc-800 text-xs font-medium flex items-center gap-2 transition-all"
                           >
-                            <Mic className="w-3.5 h-3.5 text-indigo-400" />
+                            <Mic className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                             <span>Editor & Dictado por Voz</span>
                           </button>
 
                           <button
                             onClick={() => deleteLesson(mod.id, les.id)}
-                            className="p-2 text-zinc-400 hover:text-rose-400 transition-colors rounded-lg hover:bg-rose-500/10"
+                            className="p-2 text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors rounded-lg hover:bg-rose-50 dark:hover:bg-rose-500/10"
                             title="Eliminar lección"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -923,9 +923,9 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                         <p>Aún no hay lecciones en este módulo.</p>
                         <button
                           onClick={() => handleAddNewLesson(mod.id)}
-                          className="h-9 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 text-zinc-300 font-medium text-xs inline-flex items-center gap-1.5 transition-all"
+                          className="h-9 px-3 rounded-xl bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 shadow-xs dark:bg-zinc-900 dark:hover:bg-zinc-850 dark:border-zinc-800 dark:text-zinc-300 font-medium text-xs inline-flex items-center gap-1.5 transition-all"
                         >
-                          <Plus className="w-3.5 h-3.5 text-indigo-400" />
+                          <Plus className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                           <span>Crear Primera Lección</span>
                         </button>
                       </div>
@@ -940,16 +940,16 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
       {/* Modal 1: Crear Nuevo Curso */}
       {showCreateCourseModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-zinc-900 max-w-lg w-full p-6 rounded-2xl border border-zinc-800 space-y-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-              <h3 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-400" />
+        <div className="fixed inset-0 z-50 bg-black/50 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-zinc-900 max-w-lg w-full p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 transition-colors">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 <span>Crear Nuevo Curso (Borrador)</span>
               </h3>
               <button
                 onClick={() => setShowCreateCourseModal(false)}
-                className="text-zinc-400 hover:text-zinc-100"
+                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-100"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -957,7 +957,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
             <form onSubmit={handleCreateCourse} className="space-y-4 text-sm">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                   Título del Curso
                 </label>
                 <input
@@ -966,12 +966,12 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   placeholder="Ej: Curso Profesional de Mezcla de Sonido"
                   value={newCourseTitle}
                   onChange={(e) => setNewCourseTitle(e.target.value)}
-                  className="w-full h-11 px-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
+                  className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                   Descripción Breve
                 </label>
                 <textarea
@@ -979,13 +979,13 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   placeholder="Aprende ecualización quirúrgica, compresión dinámica y mezcla espacial..."
                   value={newCourseDescription}
                   onChange={(e) => setNewCourseDescription(e.target.value)}
-                  className="w-full p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all leading-relaxed"
+                  className="w-full p-3 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all leading-relaxed"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                     Precio (USD)
                   </label>
                   <input
@@ -993,31 +993,31 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                     step="0.01"
                     value={newCoursePrice}
                     onChange={(e) => setNewCoursePrice(e.target.value)}
-                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                     Imagen Portada (URL)
                   </label>
                   <input
                     type="text"
                     value={newCourseImage}
                     onChange={(e) => setNewCourseImage(e.target.value)}
-                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
                   />
                 </div>
               </div>
 
-              <div className="p-3.5 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-400 text-xs leading-relaxed">
-                El curso se creará como <strong className="text-zinc-200">Borrador Privado</strong>. Podrás estructurar su temario y publicarlo a la tienda web cuando esté listo.
+              <div className="p-3.5 bg-zinc-50 border border-zinc-200 text-zinc-600 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400 rounded-xl text-xs leading-relaxed">
+                El curso se creará como <strong className="text-zinc-900 dark:text-zinc-200">Borrador Privado</strong>. Podrás estructurar su temario y publicarlo a la tienda web cuando esté listo.
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowCreateCourseModal(false)}
-                  className="h-11 px-4 text-zinc-400 hover:text-zinc-200 text-sm"
+                  className="h-11 px-4 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 text-sm"
                 >
                   Cancelar
                 </button>
@@ -1035,23 +1035,23 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
 
       {/* Modal 2: EDITOR AVANZADO DE LECCIONES CON DICTADO POR VOZ (Speech-to-Text) Y ADJUNTOS */}
       {editingLesson && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-zinc-900 max-w-3xl w-full p-6 rounded-2xl border border-zinc-800 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-zinc-900 max-w-3xl w-full p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-6 shadow-2xl animate-in fade-in zoom-in-95 max-h-[92vh] overflow-y-auto transition-colors">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-300 border border-zinc-700">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-800 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700">
                     Editor de Lección Avanzado
                   </span>
                   {isListening && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-300 border border-red-500/30 flex items-center gap-1.5 animate-pulse">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-600 border border-red-500/30 dark:text-red-300 flex items-center gap-1.5 animate-pulse">
                       <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
                       <span>Escuchando micrófono...</span>
                     </span>
                   )}
                 </div>
-                <h3 className="text-xl font-bold tracking-tight text-zinc-100 mt-1">
+                <h3 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mt-1">
                   {editingLesson.lesson.title || "Configurar Lección"}
                 </h3>
               </div>
@@ -1061,7 +1061,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   setIsListening(false);
                   setEditingLesson(null);
                 }}
-                className="text-zinc-400 hover:text-zinc-100 p-1"
+                className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-100 p-1"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -1072,7 +1072,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Title */}
                 <div className="md:col-span-2 space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 block">
                     Título de la Lección
                   </label>
                   <input
@@ -1084,14 +1084,14 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                         lesson: { ...editingLesson.lesson, title: e.target.value },
                       })
                     }
-                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
                   />
                 </div>
 
                 {/* Video URL */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                    <Video className="w-3.5 h-3.5 text-indigo-400" />
+                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
+                    <Video className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                     <span>URL del Vídeo (Vimeo, YouTube o MP4)</span>
                   </label>
                   <input
@@ -1104,14 +1104,14 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                       })
                     }
                     placeholder="https://www.youtube.com/embed/..."
-                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
                   />
                 </div>
 
                 {/* Duration */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
                     <span>Duración Estimada (en Minutos)</span>
                   </label>
                   <input
@@ -1126,19 +1126,19 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                         lesson: { ...editingLesson.lesson, duration: mins * 60 },
                       });
                     }}
-                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 transition-all"
                   />
                 </div>
               </div>
 
               {/* Checkbox: Free Preview */}
-              <div className="p-4 bg-zinc-950/60 rounded-xl border border-zinc-800 flex items-center justify-between">
+              <div className="p-4 bg-zinc-50 dark:bg-zinc-950/60 rounded-xl border border-zinc-200 dark:border-zinc-800 flex items-center justify-between transition-colors">
                 <div className="space-y-0.5">
-                  <span className="font-semibold text-zinc-200 text-sm flex items-center gap-2">
-                    <Eye className="w-4 h-4 text-emerald-400" />
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-200 text-sm flex items-center gap-2">
+                    <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <span>Lección Gratuita de Vista Previa (Public Preview)</span>
                   </span>
-                  <p className="text-xs text-zinc-400">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     Permite que los usuarios no inscritos vean esta lección gratis como demostración del curso.
                   </p>
                 </div>
@@ -1155,16 +1155,16 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                     }
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600" />
+                  <div className="w-11 h-6 bg-zinc-300 dark:bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600" />
                 </label>
               </div>
 
               {/* Rich Text Explication with Integrated Speech-to-Text Microphone */}
               <div className="space-y-2 pt-2">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-zinc-950/80 p-3 rounded-t-xl border border-zinc-800">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-zinc-50 dark:bg-zinc-950/80 p-3 rounded-t-xl border border-zinc-200 dark:border-zinc-800 transition-colors">
                   <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-indigo-400" />
-                    <span className="font-semibold text-zinc-200 text-xs uppercase tracking-wider">
+                    <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    <span className="font-semibold text-zinc-800 dark:text-zinc-200 text-xs uppercase tracking-wider">
                       Explicación Teórica / Notas de la Lección
                     </span>
                   </div>
@@ -1175,18 +1175,18 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                     onClick={toggleSpeechRecognition}
                     className={`h-9 px-3.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2 ${
                       isListening
-                        ? "bg-red-500/20 text-red-200 border border-red-500/60 animate-pulse"
-                        : "bg-zinc-900 text-zinc-200 border border-zinc-800 hover:bg-zinc-850"
+                        ? "bg-red-500/15 text-red-600 border border-red-500/40 dark:bg-red-500/20 dark:text-red-200 dark:border-red-500/60 animate-pulse"
+                        : "bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800 dark:hover:bg-zinc-850 shadow-xs"
                     }`}
                   >
                     {isListening ? (
                       <>
-                        <MicOff className="w-3.5 h-3.5 text-red-400" />
+                        <MicOff className="w-3.5 h-3.5 text-red-500 dark:text-red-400" />
                         <span>Escuchando... Habla al Micrófono</span>
                       </>
                     ) : (
                       <>
-                        <Mic className="w-3.5 h-3.5 text-indigo-400" />
+                        <Mic className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                         <span>Dictar Explicación (Speech-to-Text)</span>
                       </>
                     )}
@@ -1203,13 +1203,13 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                     })
                   }
                   placeholder="Escribe o dicta por voz la explicación teórica de esta lección..."
-                  className="w-full p-3.5 rounded-b-xl bg-zinc-950 border border-zinc-800 text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 leading-relaxed font-sans"
+                  className="w-full p-3.5 rounded-b-xl bg-zinc-50 border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40 leading-relaxed font-sans transition-colors"
                 />
 
-                <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
+                <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-500 px-1">
                   <span>Caracteres: {(editingLesson.lesson.content || "").length}</span>
                   {isListening && (
-                    <span className="text-red-400 animate-pulse font-medium flex items-center gap-1">
+                    <span className="text-red-500 dark:text-red-400 animate-pulse font-medium flex items-center gap-1">
                       <Volume2 className="w-3.5 h-3.5" />
                       <span>Transcribiendo audio en vivo a español...</span>
                     </span>
@@ -1218,10 +1218,10 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
               </div>
 
               {/* Attachments Section */}
-              <div className="space-y-3 pt-4 border-t border-zinc-800">
+              <div className="space-y-3 pt-4 border-t border-zinc-200 dark:border-zinc-800 transition-colors">
                 <div className="flex items-center justify-between flex-wrap gap-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-300 flex items-center gap-2">
-                    <Paperclip className="w-4 h-4 text-indigo-400" />
+                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                    <Paperclip className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     <span>Archivos Descargables Adjuntos</span>
                   </label>
                   <span className="text-xs text-zinc-500">Stems WAV, Multitracks, MIDIs, Presets, PDFs</span>
@@ -1232,17 +1232,17 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   {(editingLesson.lesson.attachments || []).map((att) => (
                     <div
                       key={att.id}
-                      className="flex items-center justify-between bg-zinc-950/60 p-3 rounded-xl border border-zinc-800 text-xs"
+                      className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-950/60 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs transition-colors"
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="px-2 py-0.5 rounded-md font-semibold uppercase bg-zinc-900 text-zinc-300 border border-zinc-800">
+                        <span className="px-2 py-0.5 rounded-md font-semibold uppercase bg-zinc-200/80 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-800">
                           {att.fileType}
                         </span>
-                        <span className="text-zinc-200 font-medium">{att.title}</span>
+                        <span className="text-zinc-800 dark:text-zinc-200 font-medium">{att.title}</span>
                       </div>
                       <button
                         onClick={() => handleRemoveAttachment(att.id)}
-                        className="text-zinc-400 hover:text-rose-400 transition-colors p-1"
+                        className="text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors p-1"
                         title="Eliminar adjunto"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -1251,15 +1251,15 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                   ))}
 
                   {(editingLesson.lesson.attachments || []).length === 0 && (
-                    <div className="p-4 rounded-xl bg-zinc-950/40 border border-dashed border-zinc-800 text-center text-zinc-500 text-xs">
+                    <div className="p-4 rounded-xl bg-zinc-50/60 dark:bg-zinc-950/40 border border-dashed border-zinc-200 dark:border-zinc-800 text-center text-zinc-500 text-xs">
                       No hay archivos descargables adjuntos en esta lección todavía.
                     </div>
                   )}
                 </div>
 
                 {/* Form to Add New Attachment */}
-                <div className="p-4 bg-zinc-950/60 rounded-xl border border-zinc-800 space-y-3 mt-3">
-                  <div className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+                <div className="p-4 bg-zinc-50 dark:bg-zinc-950/60 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-3 mt-3 transition-colors">
+                  <div className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
                     Enlazar / Subir Nuevo Recurso Descargable
                   </div>
 
@@ -1269,13 +1269,13 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                       placeholder="Nombre (ej. Stems_Multitrack_WAV_Mezcla.zip)"
                       value={newAttTitle}
                       onChange={(e) => setNewAttTitle(e.target.value)}
-                      className="sm:col-span-2 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs focus:outline-none focus:border-indigo-500"
+                      className="sm:col-span-2 px-3 py-2 rounded-xl bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-200 text-xs focus:outline-none focus:border-indigo-500"
                     />
 
                     <select
                       value={newAttFileType}
                       onChange={(e) => setNewAttFileType(e.target.value as any)}
-                      className="px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs font-medium focus:outline-none focus:border-indigo-500"
+                      className="px-3 py-2 rounded-xl bg-white border border-zinc-300 text-zinc-900 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-200 text-xs font-medium focus:outline-none focus:border-indigo-500"
                     >
                       <option value="ZIP">ZIP / WAV Stems</option>
                       <option value="MIDI">Archivos MIDI</option>
@@ -1288,7 +1288,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                     <button
                       type="button"
                       onClick={handleAddAttachment}
-                      className="h-9 px-4 bg-zinc-900 hover:bg-zinc-850 text-zinc-200 border border-zinc-800 font-medium rounded-xl text-xs transition-all"
+                      className="h-9 px-4 bg-white hover:bg-zinc-100 text-zinc-700 border border-zinc-200 shadow-xs dark:bg-zinc-900 dark:hover:bg-zinc-850 dark:text-zinc-200 dark:border-zinc-800 font-medium rounded-xl text-xs transition-all"
                     >
                       + Adjuntar Recurso
                     </button>
@@ -1297,7 +1297,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-800 transition-colors">
                 <button
                   type="button"
                   onClick={() => {
@@ -1305,7 +1305,7 @@ export default function CourseBuilderClient({ initialCourses }: CourseBuilderCli
                     setIsListening(false);
                     setEditingLesson(null);
                   }}
-                  className="h-11 px-4 text-zinc-400 hover:text-zinc-200 text-sm"
+                  className="h-11 px-4 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 text-sm"
                 >
                   Cancelar
                 </button>
